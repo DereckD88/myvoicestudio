@@ -1,0 +1,16 @@
+{
+  "name": "MyVoice Studio",
+  "short_name": "MyVoice",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#100d1c",
+  "theme_color": "#100d1c",
+  "icons": [
+    {
+      "src": "./myvoice-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
