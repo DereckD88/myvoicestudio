@@ -1,0 +1,1217 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="theme-color" content="#11111c">
+
+<title>MyVoice Studio — Karaoke Recorder</title>
+
+<style>
+
+:root {
+
+  color-scheme: dark;
+
+  --bg:#11111c;--panel:#1d1d2e;--panel2:#292941;
+
+  --text:#f8f6ff;--muted:#aaa8c2;--purple:#b59aff;
+
+  --green:#69e7c5;--border:#3a3954;--red:#ff91a6;
+
+}
+
+*{box-sizing:border-box}
+
+body{
+
+  margin:0;background:radial-gradient(ellipse at top,#29234b,var(--bg) 55%);
+
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+}
+
+header{text-align:center;padding:24px 16px 15px}
+
+.logo{
+
+  display:inline-grid;place-items:center;width:52px;height:52px;
+
+  border-radius:17px;background:linear-gradient(135deg,var(--purple),var(--green));
+
+  color:#171326;font-size:21px;font-weight:900
+
+}
+
+h1{font-size:27px;margin:10px 0 5px}
+
+header p{margin:0;color:var(--muted);font-size:13px}
+
+main{max-width:760px;margin:auto;padding:0 13px 40px}
+
+.card{
+
+  background:#1d1d2ef5;border:1px solid var(--border);
+
+  border-radius:18px;padding:16px;margin:12px 0
+
+}
+
+h2{font-size:16px;margin:0 0 13px}
+
+.num{
+
+  display:inline-grid;place-items:center;width:27px;height:27px;
+
+  border-radius:9px;background:#b59aff20;color:var(--purple);
+
+  margin-right:7px;font-size:12px
+
+}
+
+label{display:block;color:var(--muted);font-size:13px;margin:12px 0 7px}
+
+input[type=file],textarea,select{
+
+  width:100%;background:#131320;color:var(--text);
+
+  border:1px solid var(--border);border-radius:11px;padding:12px;font:inherit
+
+}
+
+textarea{min-height:135px;line-height:1.6;resize:vertical}
+
+button,.download{
+
+  min-height:44px;padding:11px 13px;border:0;border-radius:11px;
+
+  font:inherit;font-size:13px;font-weight:650;cursor:pointer;
+
+  background:var(--panel2);color:var(--text);
+
+  display:inline-flex;align-items:center;justify-content:center;
+
+  text-align:center;text-decoration:none;gap:6px
+
+}
+
+button:disabled{opacity:.38;cursor:not-allowed}
+
+.primary{background:linear-gradient(120deg,#b59aff,#9580f5);color:#181326}
+
+.green{background:#16483e;color:#a8ffe5}
+
+.red{background:#512438;color:#ffbac8}
+
+.full{width:100%}
+
+.row{display:flex;gap:8px;flex-wrap:wrap}
+
+.row>*{flex:1}
+
+audio{width:100%;margin-top:12px}
+
+.status{
+
+  background:#131320;border:1px solid var(--border);border-radius:11px;
+
+  padding:11px;color:var(--muted);font-size:12px;line-height:1.6;
+
+  overflow-wrap:anywhere
+
+}
+
+.good{color:var(--green)}.bad{color:var(--red)}
+
+.hint{font-size:12px;color:var(--muted);line-height:1.6}
+
+.karaoke{
+
+  background:linear-gradient(145deg,#292344,#171725);
+
+  border:1px solid #51456f;border-radius:17px;
+
+  padding:18px 13px;text-align:center;min-height:190px;
+
+  display:flex;flex-direction:column;justify-content:center;gap:13px
+
+}
+
+.karaoke .previous{font-size:14px;color:#9992b9;min-height:20px}
+
+.karaoke .current{
+
+  font-size:clamp(23px,6vw,36px);font-weight:850;line-height:1.3;
+
+  color:var(--green);text-shadow:0 0 25px #69e7c526;
+
+  overflow-wrap:anywhere
+
+}
+
+.karaoke .next{font-size:16px;color:#c4b8e9;min-height:22px}
+
+.karaoke .counter{font-size:11px;color:var(--muted)}
+
+input[type=range]{width:100%;accent-color:var(--purple)}
+
+.line-list{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+
+.lyric-line{
+
+  display:flex;align-items:center;gap:8px;padding:10px;
+
+  background:#141421;border:1px solid var(--border);border-radius:10px;
+
+  font-size:13px
+
+}
+
+.lyric-line.active{border-color:var(--green);background:#17342f}
+
+.lyric-line .words{flex:1;overflow-wrap:anywhere}
+
+.lyric-line small{color:var(--muted);white-space:nowrap}
+
+.lyric-line button{min-height:34px;padding:6px 9px}
+
+.check{display:flex;align-items:center;gap:9px;font-size:13px;margin:13px 0}
+
+.check input{width:18px;height:18px;accent-color:var(--purple)}
+
+footer{text-align:center;padding:12px 18px 28px;color:var(--muted);font-size:11px}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">MV</div>
+
+  <h1>MyVoice Studio</h1>
+
+  <p>Your music. Your lyrics. Your voice.</p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h2><span class="num">1</span>Load your song</h2>
+
+<label for="musicFile">Instrumental or backing track</label>
+
+<input id="musicFile" type="file" accept="audio/*,.mp3">
+
+<div id="musicStatus" class="status" style="margin-top:10px">Choose an audio file to begin.</div>
+
+<audio id="music" controls preload="metadata" hidden></audio>
+
+</section>
+
+<section class="card">
+
+<h2><span class="num">2</span>Add your lyrics</h2>
+
+<label for="lyricFile">Import a lyrics text file (optional)</label>
+
+<input id="lyricFile" type="file" accept=".txt,text/plain">
+
+<label for="lyrics">One sung line per line</label>
+
+<textarea id="lyrics" placeholder="Verse 1&#10;Your first line goes here&#10;Your second line goes here&#10;&#10;Chorus&#10;Your chorus goes here"></textarea>
+
+<div class="row" style="margin-top:9px">
+
+<button id="makeLines">Update lyric lines</button>
+
+<button id="saveLyrics">Download lyrics</button>
+
+</div>
+
+<p class="hint">Put each sung phrase on its own line. Blank lines are ignored.</p>
+
+</section>
+
+<section class="card">
+
+<h2><span class="num">3</span>Synchronize your lyrics</h2>
+
+<div class="status">
+
+Play your instrumental and tap <b>Mark next line</b> when each lyric line begins. The app saves the timing so the words follow the song during recording.
+
+</div>
+
+<div class="row" style="margin-top:12px">
+
+<button id="syncStart" class="primary">▶ Start lyric sync</button>
+
+<button id="markLine" class="green" disabled>Mark next line</button>
+
+<button id="syncStop" disabled>Finish sync</button>
+
+</div>
+
+<div id="syncStatus" class="status" style="margin-top:10px">Add lyrics and an instrumental first.</div>
+
+<div id="lineList" class="line-list"></div>
+
+<div class="row" style="margin-top:10px">
+
+<button id="resetSync">Reset timings</button>
+
+<button id="previewStart">Preview lyrics</button>
+
+</div>
+
+<p class="hint">If you miss a line, reset and try again. For the best results, synchronize while listening to the actual recording, not by estimating the timing.</p>
+
+</section>
+
+<section class="card">
+
+<h2><span class="num">4</span>Karaoke screen</h2>
+
+<div class="karaoke" aria-live="polite">
+
+<div id="previousLine" class="previous">Your previous line</div>
+
+<div id="currentLine" class="current">Your lyrics appear here</div>
+
+<div id="nextLine" class="next">Your next line</div>
+
+<div id="lineCounter" class="counter">Line 0 of 0</div>
+
+</div>
+
+<label for="fontSize">Lyric text size</label>
+
+<input id="fontSize" type="range" min="22" max="44" value="32">
+
+<div class="row" style="margin-top:10px">
+
+<button id="backLine">← Previous line</button>
+
+<button id="forwardLine">Next line →</button>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2><span class="num">5</span>Record your performance</h2>
+
+<div class="status">Connect headphones if possible to prevent the instrumental from leaking into your microphone. Recording begins with a countdown and starts the backing track from the beginning.</div>
+
+<label for="inputGain">Vocal recording gain</label>
+
+<div class="row" style="align-items:center">
+
+<span class="hint">Microphone level</span>
+
+<strong id="gainValue">100%</strong>
+
+</div>
+
+<input id="inputGain" type="range" min="50" max="150" value="100">
+
+<label class="check">
+
+<input id="polish" type="checkbox" checked>
+
+Apply basic vocal filtering and compression
+
+</label>
+
+<div class="row">
+
+<button id="record" class="primary full">● Record vocals</button>
+
+<button id="stopRecord" class="red" disabled>■ Stop</button>
+
+</div>
+
+<div id="recordStatus" class="status" style="margin-top:11px">Ready when you are.</div>
+
+<audio id="take" controls hidden></audio>
+
+</section>
+
+<section class="card">
+
+<h2><span class="num">6</span>Listen and download</h2>
+
+<p class="hint">Review your performance before exporting. Your original recording remains available so you can compare takes.</p>
+
+<div class="row">
+
+<button id="downloadTake" disabled>Download original take</button>
+
+<button id="exportMp3" class="primary" disabled>Export finished MP3</button>
+
+</div>
+
+<div id="exportStatus" class="status" style="margin-top:11px">Finish a recording to enable exports.</div>
+
+</section>
+
+<div id="appStatus" class="status">MyVoice Studio is ready.</div>
+
+</main>
+
+<footer>MyVoice Studio · Karaoke recording prototype</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+
+<script>
+
+(() => {
+
+"use strict";
+
+const $ = id => document.getElementById(id);
+
+const music = $("music"), take = $("take"), lyrics = $("lyrics");
+
+let musicURL = null, takeURL = null, takeBlob = null;
+
+let lines = [], timings = [], currentIndex = 0;
+
+let syncing = false, previewing = false, recording = false, preparing = false;
+
+let syncRAF = 0, playStart = 0;
+
+let ctx = null, backingSource = null, destination = null;
+
+let micStream = null, micSource = null, dryGain = null;
+
+let filter = null, compressor = null, vocalGain = null;
+
+let recorder = null, chunks = [], cancelSetup = false;
+
+function msg(id, text, type="") {
+
+  $(id).textContent = text;
+
+  $(id).className = "status" + (type ? " " + type : "");
+
+}
+
+function stem(name) {
+
+  return (name || "myvoice-song").replace(/\.[^/.]+$/,"")
+
+    .replace(/[^a-z0-9_-]+/gi,"-").replace(/^-+|-+$/g,"") || "myvoice-song";
+
+}
+
+function download(blob, name) {
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+
+  a.href = url; a.download = name; a.style.display = "none";
+
+  document.body.appendChild(a); a.click(); a.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+}
+
+function readLines() {
+
+  return lyrics.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+
+}
+
+function renderLyrics() {
+
+  lines = readLines();
+
+  timings = [];
+
+  currentIndex = 0;
+
+  drawLineList();
+
+  showLine(0);
+
+  msg("syncStatus", lines.length
+
+    ? lines.length + " lyric lines ready. Start synchronization when ready."
+
+    : "Add your lyrics first.");
+
+}
+
+function showLine(index) {
+
+  if (!lines.length) {
+
+    $("previousLine").textContent = "";
+
+    $("currentLine").textContent = "Your lyrics appear here";
+
+    $("nextLine").textContent = "";
+
+    $("lineCounter").textContent = "Line 0 of 0";
+
+    return;
+
+  }
+
+  currentIndex = Math.max(0, Math.min(index, lines.length-1));
+
+  $("previousLine").textContent = currentIndex > 0 ? lines[currentIndex-1] : "";
+
+  $("currentLine").textContent = lines[currentIndex];
+
+  $("nextLine").textContent = currentIndex < lines.length-1 ? lines[currentIndex+1] : "";
+
+  $("lineCounter").textContent = "Line " + (currentIndex+1) + " of " + lines.length;
+
+  document.querySelectorAll(".lyric-line").forEach((el,i)=>{
+
+    el.classList.toggle("active", i === currentIndex);
+
+  });
+
+}
+
+function drawLineList() {
+
+  const list = $("lineList"); list.replaceChildren();
+
+  lines.forEach((line,i)=>{
+
+    const item = document.createElement("div");
+
+    item.className = "lyric-line" + (i===currentIndex ? " active" : "");
+
+    const words = document.createElement("span");
+
+    words.className = "words"; words.textContent = (i+1)+". "+line;
+
+    const time = document.createElement("small");
+
+    time.textContent = timings[i] == null ? "Not timed" : timings[i].toFixed(2)+"s";
+
+    const jump = document.createElement("button");
+
+    jump.textContent = "View";
+
+    jump.addEventListener("click",()=>showLine(i));
+
+    item.append(words,time,jump); list.appendChild(item);
+
+  });
+
+}
+
+function updateTimingDisplay() {
+
+  drawLineList();
+
+  const count = timings.filter(t=>t!=null).length;
+
+  msg("syncStatus", count + " of " + lines.length + " lines timed.");
+
+}
+
+function stopAnimation() {
+
+  if (syncRAF) cancelAnimationFrame(syncRAF);
+
+  syncRAF = 0;
+
+}
+
+function activeLineAt(time) {
+
+  if (!lines.length) return 0;
+
+  let idx = 0;
+
+  for (let i=0; i<timings.length; i++) {
+
+    if (timings[i] != null && timings[i] <= time) idx = i;
+
+    else if (timings[i] != null && timings[i] > time) break;
+
+  }
+
+  return idx;
+
+}
+
+function animateLyrics() {
+
+  stopAnimation();
+
+  const tick = () => {
+
+    if (syncing || previewing || recording) {
+
+      showLine(activeLineAt(music.currentTime));
+
+      syncRAF = requestAnimationFrame(tick);
+
+    }
+
+  };
+
+  syncRAF = requestAnimationFrame(tick);
+
+}
+
+function resetTimings() {
+
+  timings = [];
+
+  currentIndex = 0;
+
+  drawLineList();
+
+  showLine(0);
+
+  msg("syncStatus","Timings reset. Start synchronization again.");
+
+}
+
+$("musicFile").addEventListener("change",()=>{
+
+  const file=$("musicFile").files[0]; if(!file) return;
+
+  if(musicURL) URL.revokeObjectURL(musicURL);
+
+  musicURL=URL.createObjectURL(file);
+
+  music.src=musicURL; music.hidden=false; music.load();
+
+  $("musicStatus").textContent="Loaded: "+file.name+" ("+(file.size/1048576).toFixed(2)+" MB)";
+
+  msg("appStatus","Instrumental loaded. Add lyrics and synchronize them.");
+
+});
+
+$("lyricFile").addEventListener("change",async()=>{
+
+  const file=$("lyricFile").files[0]; if(!file)return;
+
+  lyrics.value=await file.text(); renderLyrics();
+
+});
+
+$("makeLines").addEventListener("click",renderLyrics);
+
+lyrics.addEventListener("input",()=>{
+
+  // Don't silently change timings while the user is recording or syncing.
+
+  if(!syncing&&!recording) renderLyrics();
+
+});
+
+$("saveLyrics").addEventListener("click",()=>{
+
+  download(new Blob([lyrics.value],{type:"text/plain;charset=utf-8"}),"myvoice-lyrics.txt");
+
+});
+
+$("fontSize").addEventListener("input",()=>{
+
+  $("currentLine").style.fontSize=$("fontSize").value+"px";
+
+});
+
+$("backLine").addEventListener("click",()=>showLine(currentIndex-1));
+
+$("forwardLine").addEventListener("click",()=>showLine(currentIndex+1));
+
+async function ensureGraph() {
+
+  if(!ctx) {
+
+    const AC=window.AudioContext||window.webkitAudioContext;
+
+    if(!AC) throw Error("Web Audio is not supported in this browser.");
+
+    ctx=new AC();
+
+    destination=ctx.createMediaStreamDestination();
+
+    backingSource=ctx.createMediaElementSource(music);
+
+    backingSource.connect(ctx.destination);
+
+    backingSource.connect(destination);
+
+  }
+
+  if(ctx.state==="suspended") await ctx.resume();
+
+}
+
+function resetMicGraph(stream) {
+
+  micStream=stream;
+
+  micSource=ctx.createMediaStreamSource(stream);
+
+  dryGain=ctx.createGain();
+
+  filter=ctx.createBiquadFilter();
+
+  filter.type="highpass"; filter.frequency.value=85;
+
+  compressor=ctx.createDynamicsCompressor();
+
+  compressor.threshold.value=-22;
+
+  compressor.knee.value=18;
+
+  compressor.ratio.value=3;
+
+  compressor.attack.value=.008;
+
+  compressor.release.value=.22;
+
+  vocalGain=ctx.createGain();
+
+  micSource.connect(dryGain); dryGain.connect(destination);
+
+  micSource.connect(filter); filter.connect(compressor);
+
+  compressor.connect(vocalGain); vocalGain.connect(destination);
+
+  updatePolish();
+
+}
+
+function updatePolish() {
+
+  if(!dryGain||!vocalGain||!ctx)return;
+
+  const polished=$("polish").checked;
+
+  dryGain.gain.setTargetAtTime(polished?0:1,ctx.currentTime,.02);
+
+  vocalGain.gain.setTargetAtTime(polished?Number($("inputGain").value)/100:0,ctx.currentTime,.02);
+
+}
+
+$("polish").addEventListener("change",updatePolish);
+
+$("inputGain").addEventListener("input",()=>{
+
+  $("gainValue").textContent=$("inputGain").value+"%";
+
+  updatePolish();
+
+});
+
+function resetMic() {
+
+  if(micStream) micStream.getTracks().forEach(t=>t.stop());
+
+  micStream=null; micSource=null; dryGain=null; filter=null;
+
+  compressor=null; vocalGain=null;
+
+}
+
+function supportedRecorderOptions() {
+
+  if(!window.MediaRecorder)return {};
+
+  for(const mimeType of ["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"]) {
+
+    try { if(MediaRecorder.isTypeSupported(mimeType))return {mimeType}; } catch(e){}
+
+  }
+
+  return {};
+
+}
+
+$("syncStart").addEventListener("click",async()=>{
+
+  if(!musicURL){msg("syncStatus","Load an instrumental first.","bad");return;}
+
+  if(!lines.length)renderLyrics();
+
+  if(!lines.length){msg("syncStatus","Add lyrics first.","bad");return;}
+
+  if(recording||preparing){msg("syncStatus","Stop recording before synchronizing.","bad");return;}
+
+  try {
+
+    stopAnimation();
+
+    await ensureGraph();
+
+    timings=Array(lines.length).fill(null);
+
+    timings[0]=0;
+
+    currentIndex=0;
+
+    music.currentTime=0;
+
+    syncing=true;previewing=false;
+
+    $("syncStart").disabled=true;
+
+    $("markLine").disabled=false;
+
+    $("syncStop").disabled=false;
+
+    showLine(0);updateTimingDisplay();
+
+    await music.play();
+
+    animateLyrics();
+
+    msg("syncStatus","Listening. Tap Mark next line when each new lyric begins.","good");
+
+  } catch(e) {
+
+    syncing=false;
+
+    $("syncStart").disabled=false;
+
+    $("markLine").disabled=true;
+
+    $("syncStop").disabled=true;
+
+    msg("syncStatus","Could not start playback: "+e.message,"bad");
+
+  }
+
+});
+
+$("markLine").addEventListener("click",()=>{
+
+  if(!syncing)return;
+
+  const next=timings.findIndex((t,i)=>i>0&&t==null);
+
+  if(next===-1){
+
+    msg("syncStatus","All lines have timings. Tap Finish sync.","good");
+
+    $("markLine").disabled=true;return;
+
+  }
+
+  timings[next]=music.currentTime;
+
+  showLine(next);
+
+  updateTimingDisplay();
+
+  if(timings.every(t=>t!=null)) {
+
+    $("markLine").disabled=true;
+
+    msg("syncStatus","Every line is timed. Tap Finish sync.","good");
+
+  }
+
+});
+
+$("syncStop").addEventListener("click",()=>{
+
+  syncing=false;music.pause();stopAnimation();
+
+  $("syncStart").disabled=false;$("markLine").disabled=true;$("syncStop").disabled=true;
+
+  updateTimingDisplay();
+
+  msg("syncStatus",timings.every(t=>t!=null)
+
+    ?"Synchronization complete. You are ready to record."
+
+    :"Synchronization stopped. Some lines still need timing. You can reset and try again.","good");
+
+});
+
+$("resetSync").addEventListener("click",()=>{
+
+  syncing=false;previewing=false;music.pause();stopAnimation();
+
+  $("syncStart").disabled=false;$("markLine").disabled=true;$("syncStop").disabled=true;
+
+  resetTimings();
+
+});
+
+$("previewStart").addEventListener("click",async()=>{
+
+  if(!musicURL||!lines.length){msg("syncStatus","Load music and lyrics first.","bad");return;}
+
+  if(syncing||recording||preparing){msg("syncStatus","Stop the current activity first.","bad");return;}
+
+  try {
+
+    await ensureGraph();
+
+    previewing=true;music.currentTime=0;
+
+    await music.play();animateLyrics();
+
+    msg("syncStatus","Previewing lyric timing. The display follows the song.","good");
+
+  }catch(e){msg("syncStatus","Could not preview: "+e.message,"bad");}
+
+});
+
+music.addEventListener("ended",()=>{
+
+  if(syncing) {
+
+    syncing=false;stopAnimation();
+
+    $("syncStart").disabled=false;$("markLine").disabled=true;$("syncStop").disabled=true;
+
+    msg("syncStatus","The song ended. Finish timing or reset and try again.");
+
+  }
+
+  if(previewing){previewing=false;stopAnimation();showLine(lines.length-1);}
+
+  if(recording) stopRecording();
+
+});
+
+music.addEventListener("pause",()=>{
+
+  if(previewing&&!recording&&!syncing) {
+
+    previewing=false;stopAnimation();
+
+  }
+
+});
+
+$("record").addEventListener("click",startRecording);
+
+$("stopRecord").addEventListener("click",stopRecording);
+
+async function startRecording() {
+
+  if(preparing||recording)return;
+
+  if(!musicURL){msg("recordStatus","Load an instrumental first.","bad");return;}
+
+  if(!lines.length){msg("recordStatus","Add lyrics first.","bad");return;}
+
+  if(timings.length!==lines.length||timings.some(t=>t==null)) {
+
+    msg("recordStatus","Synchronize every lyric line before recording.","bad");return;
+
+  }
+
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder) {
+
+    msg("recordStatus","Recording is unavailable. Open your published HTTPS site in Safari and try again.","bad");return;
+
+  }
+
+  preparing=true;cancelSetup=false;
+
+  $("record").disabled=true;
+
+  msg("recordStatus","Requesting microphone access…");
+
+  try {
+
+    await ensureGraph();
+
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{
+
+      echoCancellation:false,noiseSuppression:false,autoGainControl:false
+
+    }});
+
+    if(cancelSetup){stream.getTracks().forEach(t=>t.stop());preparing=false;$("record").disabled=false;return;}
+
+    resetMicGraph(stream);
+
+    chunks=[];takeBlob=null;
+
+    if(takeURL)URL.revokeObjectURL(takeURL);
+
+    takeURL=null;take.hidden=true;
+
+    $("downloadTake").disabled=true;$("exportMp3").disabled=true;
+
+    recorder=new MediaRecorder(destination.stream,supportedRecorderOptions());
+
+    recorder.addEventListener("dataavailable",e=>{if(e.data?.size)chunks.push(e.data);});
+
+    recorder.addEventListener("stop",finishRecording,{once:true});
+
+    music.pause();music.currentTime=0;
+
+    showLine(0);
+
+    let count=3;
+
+    msg("recordStatus","Get ready… "+count);
+
+    const countdown=async()=>{
+
+      while(count>0&&!cancelSetup) {
+
+        msg("recordStatus","Recording starts in "+count+"…");
+
+        await new Promise(r=>setTimeout(r,1000));count--;
+
+      }
+
+    };
+
+    await countdown();
+
+    if(cancelSetup){resetMic();preparing=false;$("record").disabled=false;return;}
+
+    // Start the recorder just before the instrumental so both are captured together.
+
+    recorder.start(250);
+
+    recording=true;preparing=false;
+
+    $("stopRecord").disabled=false;
+
+    msg("recordStatus","Recording! Sing along with the highlighted lyrics.","good");
+
+    animateLyrics();
+
+    await music.play();
+
+  }catch(e){
+
+    preparing=false;recording=false;
+
+    $("record").disabled=false;$("stopRecord").disabled=true;
+
+    resetMic();
+
+    msg("recordStatus",e.name==="NotAllowedError"
+
+      ?"Microphone access denied. Allow microphone access for Safari in iPhone Settings."
+
+      :"Could not record: "+e.message,"bad");
+
+  }
+
+}
+
+function stopRecording() {
+
+  if(preparing&&!recording) {
+
+    cancelSetup=true;
+
+    msg("recordStatus","Cancelling setup…");
+
+    return;
+
+  }
+
+  if(!recording)return;
+
+  recording=false;music.pause();stopAnimation();
+
+  if(recorder&&recorder.state!=="inactive")recorder.stop();
+
+  $("stopRecord").disabled=true;
+
+  msg("recordStatus","Finishing your recording…");
+
+}
+
+function finishRecording() {
+
+  const mime=recorder.mimeType||(chunks[0]&&chunks[0].type)||"audio/webm";
+
+  takeBlob=new Blob(chunks,{type:mime});
+
+  takeURL=URL.createObjectURL(takeBlob);
+
+  take.src=takeURL;take.hidden=false;take.load();
+
+  $("record").disabled=false;$("stopRecord").disabled=true;
+
+  $("downloadTake").disabled=false;$("exportMp3").disabled=false;
+
+  resetMic();
+
+  const ext=mime.includes("mp4")?"m4a":mime.includes("ogg")?"ogg":"webm";
+
+  $("downloadTake").onclick=()=>takeBlob&&download(takeBlob,stem($("musicFile").files[0]?.name)+"-recording."+ext);
+
+  take.onplay=()=>{previewing=true;animateTakeLyrics();};
+
+  take.onpause=()=>{previewing=false;stopAnimation();};
+
+  msg("recordStatus","Take saved. Play it back and review your performance.","good");
+
+  msg("exportStatus","Ready to export your finished MP3.","good");
+
+}
+
+function animateTakeLyrics() {
+
+  stopAnimation();
+
+  const tick=()=>{
+
+    if(previewing&&!take.paused) {
+
+      showLine(activeLineAt(take.currentTime));
+
+      syncRAF=requestAnimationFrame(tick);
+
+    }
+
+  };
+
+  syncRAF=requestAnimationFrame(tick);
+
+}
+
+take.addEventListener("ended",()=>{previewing=false;stopAnimation();});
+
+function floatTo16(floatData) {
+
+  const out=new Int16Array(floatData.length);
+
+  for(let i=0;i<floatData.length;i++){
+
+    const s=Math.max(-1,Math.min(1,floatData[i]));
+
+    out[i]=s<0?s*32768:s*32767;
+
+  }
+
+  return out;
+
+}
+
+async function exportMp3() {
+
+  if(!takeBlob)return;
+
+  if(!window.lamejs?.Mp3Encoder){
+
+    msg("exportStatus","MP3 encoder unavailable. Check your internet connection and reload the page.","bad");return;
+
+  }
+
+  $("exportMp3").disabled=true;
+
+  msg("exportStatus","Converting audio to MP3. Please keep this page open…");
+
+  let decodeCtx=null;
+
+  try {
+
+    const AC=window.AudioContext||window.webkitAudioContext;
+
+    decodeCtx=new AC();
+
+    let buffer=await decodeCtx.decodeAudioData((await takeBlob.arrayBuffer()).slice(0));
+
+    if(buffer.sampleRate!==44100){
+
+      const Offline=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+
+      const off=new Offline(buffer.numberOfChannels,Math.ceil(buffer.duration*44100),44100);
+
+      const src=off.createBufferSource();src.buffer=buffer;src.connect(off.destination);src.start();
+
+      buffer=await off.startRendering();
+
+    }
+
+    const stereo=buffer.numberOfChannels>1;
+
+    const left=floatTo16(buffer.getChannelData(0));
+
+    const right=stereo?floatTo16(buffer.getChannelData(1)):left;
+
+    const encoder=new lamejs.Mp3Encoder(stereo?2:1,44100,192);
+
+    const blocks=[];
+
+    for(let i=0;i<left.length;i+=1152){
+
+      const l=left.subarray(i,i+1152),r=right.subarray(i,i+1152);
+
+      const data=stereo?encoder.encodeBuffer(l,r):encoder.encodeBuffer(l);
+
+      if(data.length)blocks.push(new Uint8Array(data));
+
+    }
+
+    const tail=encoder.flush();if(tail.length)blocks.push(new Uint8Array(tail));
+
+    const blob=new Blob(blocks,{type:"audio/mpeg"});
+
+    if(blob.size<1000)throw Error("The exported file is unexpectedly small.");
+
+    download(blob,stem($("musicFile").files[0]?.name)+"-myvoice.mp3");
+
+    msg("exportStatus","MP3 created. Check the Downloads folder in the Files app.","good");
+
+  }catch(e){
+
+    msg("exportStatus","MP3 export failed: "+e.message+". Try downloading the original take instead.","bad");
+
+  }finally{
+
+    if(decodeCtx)try{await decodeCtx.close();}catch(e){}
+
+    $("exportMp3").disabled=false;
+
+  }
+
+}
+
+$("exportMp3").addEventListener("click",exportMp3);
+
+window.addEventListener("beforeunload",()=>{
+
+  if(musicURL)URL.revokeObjectURL(musicURL);
+
+  if(takeURL)URL.revokeObjectURL(takeURL);
+
+  resetMic();
+
+});
+
+renderLyrics();
+
+})();
+
+</script>
+
+</body>
+
+</html>
