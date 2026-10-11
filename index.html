@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,137 +7,219 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta name="theme-color" content="#171326">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>MyVoice Studio</title>
 
-<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
-
 <style>
 
-:root{color-scheme:dark;--bg:#0b0d16;--panel:#171b2b;--panel2:#22283c;--text:#f5f7ff;--muted:#aeb8d0;--purple:#a78bfa;--teal:#5eead4;--border:#303951;--red:#fb7185}
+:root {
 
-*{box-sizing:border-box}
+  --bg:#100d1c;
 
-html{scroll-behavior:smooth;scroll-padding-top:90px}
+  --panel:#201a32;
 
-body{margin:0;background:radial-gradient(ellipse at top left,#1b2040 0,#0b0d16 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+  --purple:#a78bfa;
 
-.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;background:#101421f2;border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+  --pink:#e879f9;
 
-.brand{display:flex;align-items:center;gap:10px}
+  --text:#ffffff;
 
-.brand-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,var(--purple),var(--teal));color:#101421;font-weight:950;font-size:18px}
+  --muted:#c2bad8;
 
-.brand h1{margin:0;font-size:20px;line-height:1.15}
+  --green:#86efac;
 
-.brand h1 span{color:var(--teal)}
+}
 
-.tagline{font-size:12px;color:var(--muted)}
+* { box-sizing:border-box; }
 
-.top-actions{display:flex;gap:8px;align-items:center}
+body {
 
-button,.download{border:0;border-radius:11px;padding:11px 14px;background:var(--purple);color:#111323;font-weight:800;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+  margin:0;
 
-button.secondary,.download.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+  background:linear-gradient(160deg,#30204a,#100d1c 50%);
 
-button.teal{background:var(--teal);color:#071a1a}
+  color:var(--text);
 
-button.danger{background:#512638;color:white}
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 
-button:disabled{opacity:.45;cursor:not-allowed}
+  min-height:100vh;
 
-.app-layout{display:grid;grid-template-columns:205px minmax(0,1fr);gap:18px;max-width:1440px;margin:auto;padding:18px}
+}
 
-.sidebar{position:sticky;top:82px;align-self:start;background:#121727;border:1px solid var(--border);border-radius:18px;padding:10px}
+header { text-align:center;padding:25px 12px 15px; }
 
-.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);padding:8px 10px}
+.logo { font-size:30px;font-weight:900; }
 
-.nav-btn{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:3px 0;background:transparent;border:1px solid transparent;color:var(--muted);padding:11px;border-radius:10px}
+.logo span { color:var(--pink); }
 
-.nav-btn.active,.nav-btn:hover{background:#252b42;border-color:#3b4562;color:var(--text)}
+.subtitle { color:var(--muted);font-size:13px;margin-top:6px; }
 
-.workspace{min-width:0}
+main { max-width:720px;margin:auto;padding:10px 14px 40px; }
 
-main{min-width:0}
+.screen { display:none; }
 
-.welcome{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px}
+.screen.active { display:block; }
 
-.welcome h2{font-size:23px;margin:0}
+.card {
 
-.welcome p{margin:3px 0;color:var(--muted);font-size:13px}
+  background:var(--panel);
 
-.card{background:linear-gradient(145deg,#191e30,#141827);border:1px solid var(--border);border-radius:17px;padding:18px;margin:0 0 16px;box-shadow:0 12px 32px #0002;scroll-margin-top:90px}
+  border:1px solid #49385e;
 
-.card h2{font-size:18px;margin:0 0 8px}
+  border-radius:20px;
 
-.card h3{font-size:15px;margin:13px 0 7px}
+  padding:20px;
 
-p,.hint{color:var(--muted);font-size:14px}
+  margin-bottom:14px;
 
-label{display:block;font-size:14px;margin:12px 0 5px;color:#e8e1ff}
+}
 
-input[type=file],textarea,input[type=number],select,input[type=text]{width:100%;padding:11px;background:#0d1120;color:var(--text);border:1px solid var(--border);border-radius:10px}
+h1 { font-size:25px;margin:0 0 10px; }
 
-textarea{min-height:125px;resize:vertical}
+p { color:var(--muted);line-height:1.5; }
 
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+label { display:block;margin:16px 0 7px;font-size:14px; }
 
-audio{width:100%;margin-top:8px}
+input,textarea {
 
-.status{padding:10px 12px;border-radius:10px;background:#0d1120;color:var(--teal);font-size:13px;overflow-wrap:anywhere;margin-top:10px}
+  width:100%;
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  background:#120f20;
 
-.check{display:flex;align-items:center;gap:9px}
+  color:white;
 
-.check input{width:auto}
+  border:1px solid #57466d;
 
-.mixrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+  border-radius:12px;
 
-.mixrow input{width:100%}
+  padding:14px;
 
-.bigplay{font-size:18px;padding:15px;width:100%}
+  font-size:16px;
 
-.hidden{display:none!important}
+}
 
-.lyrics-screen{min-height:390px;background:radial-gradient(ellipse at center,#182d3a 0,#090e18 70%);border:1px solid #354b5c;border-radius:18px;padding:25px 16px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:16px;margin-top:14px;overflow:hidden}
+textarea { min-height:180px;line-height:1.5; }
 
-.lyrics-screen .prev,.lyrics-screen .next{color:#7d8aa4;font-size:clamp(16px,2vw,22px);min-height:30px}
+button {
 
-.lyrics-screen .current{color:var(--teal);font-size:clamp(30px,4vw,48px);line-height:1.25;font-weight:850;text-shadow:0 0 22px #5eead433;overflow-wrap:anywhere}
+  background:var(--purple);
 
-.lyrics-screen .current .done{color:#8b83a5}
+  color:#171025;
 
-.pill{display:inline-block;background:#292541;border:1px solid var(--border);padding:3px 8px;border-radius:99px;font-size:12px;color:var(--teal)}
+  font-weight:800;
 
-small{color:var(--muted)}
+  border:0;
 
-hr{border:0;border-top:1px solid var(--border);margin:17px 0}
+  border-radius:12px;
 
-progress{width:100%;height:12px;accent-color:var(--teal)}
+  padding:14px;
 
-footer{text-align:center;color:var(--muted);padding:22px;font-size:12px}
+  font-size:15px;
 
-#welcomeScreen{max-width:680px;margin:7vh auto;padding:18px}
+  cursor:pointer;
 
-.welcome-panel{background:linear-gradient(145deg,#191e30,#111827);border:1px solid var(--border);border-radius:24px;padding:clamp(24px,5vw,48px);box-shadow:0 24px 70px #0005}
+}
 
-.welcome-panel h2{font-size:clamp(30px,7vw,44px);margin:14px 0 5px}
+button.secondary { background:#3a304f;color:white; }
 
-.welcome-panel p{font-size:16px}
+button.green { background:var(--green); }
 
-.welcome-logo{width:64px;height:64px;display:grid;place-items:center;border-radius:19px;background:linear-gradient(135deg,var(--purple),var(--teal));color:#111323;font-weight:950;font-size:23px}
+button:disabled { opacity:.45; }
 
-.welcome-panel button{width:100%;margin-top:10px;padding:15px;font-size:16px}
+.actions { display:flex;gap:10px;margin-top:18px; }
 
-.fineprint{font-size:12px;color:var(--muted)}
+.actions button { flex:1; }
 
-@media(max-width:800px){.app-layout{grid-template-columns:1fr;padding:10px;gap:10px}.sidebar{position:sticky;top:68px;z-index:15;display:flex;gap:5px;overflow-x:auto;padding:7px}.nav-label{display:none}.nav-btn{flex:0 0 auto;width:auto;margin:0;padding:9px 11px;white-space:nowrap;font-size:12px}.topbar{padding:9px 11px}.brand-mark{width:36px;height:36px}.brand h1{font-size:17px}.tagline{display:none}.top-actions button{padding:9px 10px;font-size:12px}.welcome h2{font-size:20px}.card{padding:14px}.lyrics-screen{min-height:340px;padding:20px 12px}.lyrics-screen .current{font-size:clamp(30px,8vw,44px)}}
+audio { width:100%;margin-top:12px; }
 
-@media(max-width:420px){.brand h1{font-size:15px}.top-actions{gap:5px}.top-actions button{padding:8px;font-size:11px}.nav-btn{padding:8px;font-size:11px}.lyrics-screen{min-height:300px}}
+.note {
+
+  background:#302543;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  color:#e3d9f6;
+
+  font-size:13px;
+
+  line-height:1.5;
+
+  margin-top:14px;
+
+}
+
+.status { color:var(--green);font-size:13px;margin-top:12px; }
+
+.steps { display:flex;gap:5px;margin-bottom:16px; }
+
+.steps div { flex:1;height:5px;background:#403650;border-radius:5px; }
+
+.steps div.on { background:var(--pink); }
+
+.lyrics {
+
+  background:#0b0912;
+
+  border:1px solid #55416d;
+
+  border-radius:16px;
+
+  min-height:240px;
+
+  padding:18px 12px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  gap:12px;
+
+  text-align:center;
+
+  overflow:hidden;
+
+}
+
+.line {
+
+  color:#817791;
+
+  font-size:clamp(19px,5vw,29px);
+
+  line-height:1.35;
+
+  font-weight:750;
+
+}
+
+.line.current {
+
+  background:linear-gradient(90deg,#9333ea,#d946ef);
+
+  color:white;
+
+  padding:12px 6px;
+
+  border-radius:10px;
+
+}
+
+.line.past { color:#c0b4d4; }
+
+.progress { height:6px;background:#443752;border-radius:8px;margin-top:14px;overflow:hidden; }
+
+.progress div { height:100%;width:0;background:var(--pink); }
+
+.hidden { display:none !important; }
+
+.small { font-size:12px;color:var(--muted); }
+
+footer { text-align:center;color:#988cae;font-size:12px;padding:20px; }
 
 </style>
 
@@ -144,855 +227,787 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:12px}
 
 <body>
 
-<header class="topbar">
+<header>
 
-  <div class="brand"><div class="brand-mark">MV</div><div><h1>MyVoice <span>Studio</span></h1><div class="tagline">Your personal karaoke recording studio</div></div></div>
+  <div class="logo">MyVoice <span>Studio</span></div>
 
-  <div class="top-actions"><button id="newProjectTop" class="secondary hidden">＋ New Project</button><button id="logoutBtn" class="secondary hidden">Log out</button></div>
+  <div class="subtitle">Your lyrics. Your voice. Your song.</div>
 
 </header>
 
-<section id="welcomeScreen">
+<main>
 
-  <div class="welcome-panel">
+<div class="steps">
 
-    <div class="welcome-logo">MV</div>
+  <div class="on"></div><div></div><div></div><div></div><div></div>
 
-    <h2 id="welcomeTitle">Welcome to MyVoice Studio!</h2>
+</div>
 
-    <p>Your voice. Your music. Your studio.</p>
+<!-- SCREEN 1 -->
 
-    <label for="profileName">What should we call you?</label>
+<section class="screen active" id="s0">
 
-    <input id="profileName" type="text" maxlength="40" placeholder="Enter your name" autocomplete="given-name">
+<div class="card">
 
-    <div class="actions"><button id="loginBtn" class="teal">Continue to My Studio</button></div>
+  <h1>Welcome to your studio 🎤</h1>
 
-    <p class="fineprint">Your name is remembered in this browser on this device. This quick profile is not a secure account and does not sync between devices.</p>
+  <p>Enter your local studio profile to begin.</p>
+
+  <label for="username">Profile name</label>
+
+  <input id="username" placeholder="Your name" autocomplete="username">
+
+  <label for="password">Studio password</label>
+
+  <input id="password" type="password" placeholder="Choose a password">
+
+  <div class="actions">
+
+    <button id="enter">Enter My Studio</button>
 
   </div>
 
-</section>
+  <div class="status" id="loginStatus"></div>
 
-<div id="appShell" class="app-layout hidden">
-
-<nav class="sidebar" aria-label="Studio navigation">
-
-  <div class="nav-label">Your studio</div>
-
-  <button class="nav-btn active" data-target="lyricsCard">🎤 Lyrics Studio</button>
-
-  <button class="nav-btn" data-target="songCard">🎵 Song Setup</button>
-
-  <button class="nav-btn" data-target="karaokeCard">▶ Karaoke</button>
-
-  <button class="nav-btn" data-target="recordCard">● Record</button>
-
-  <button class="nav-btn" data-target="enhanceCard">🎚 Vocal Effects</button>
-
-  <button class="nav-btn" data-target="exportCard">⇩ Export</button>
-
-</nav>
-
-<main class="workspace">
-
-<div class="welcome">
-
-  <div><h2 id="projectTitle">My Studio</h2><p id="projectSubtitle">Create a project and upload a song to get started.</p></div>
-
-  <span class="pill" id="projectStatus">No project yet</span>
-
-</div>
-
-<section class="card" id="songCard">
-
-<h2>1. Create New Project · Upload Your Song</h2>
-
-<p>Upload your song once. Use it for vocal separation, lyric timing, karaoke playback, and recording.</p>
-
-<label for="musicFile">Choose audio file</label><input id="musicFile" type="file" accept="audio/*">
-
-<audio id="music" controls preload="metadata"></audio>
-
-<div class="actions"><button class="secondary" id="restoreOriginal">Use original song</button><button class="secondary" id="saveSession">Save session</button><button class="secondary" id="clearSession">Clear saved lyrics/timing</button></div>
-
-<div id="musicStatus" class="status">Choose a song to begin.</div>
-
-</section>
-
-<section class="card" id="separationCard">
-
-<h2>2. Prepare the Karaoke Track</h2>
-
-<p>Separate vocals in your browser. The first run downloads the AI model. Processing stays on your device, but the model and library are fetched from the internet.</p>
-
-<label for="modelChoice">AI model</label>
-
-<select id="modelChoice">
-
-<option value="UVR_MDXNET_KARA_2">Karaoke 2 — smaller model, keeps some backing vocals</option>
-
-<option value="Kim_Vocal_2">Kim Vocal 2 — removes lead and backing vocals</option>
-
-<option value="UVR-MDX-NET-Voc_FT">UVR Vocal FT — removes lead and backing vocals</option>
-
-<option value="UVR_MDXNET_Main">UVR Main — removes lead and backing vocals</option>
-
-</select>
-
-<div class="actions"><button class="teal" id="separateBtn">Create instrumental</button></div>
-
-<progress id="sepProgress" value="0" max="100" hidden></progress>
-
-<div id="sepStatus" class="status">Load a song above, then create the instrumental.</div>
-
-<div id="stemResults" hidden><hr><h3>Choose the instrumental output</h3><div id="stemList"></div></div>
-
-</section>
-
-<section class="card" id="lyricsCard">
-
-<h2>Lyrics Studio</h2>
-
-<p>Paste each sung phrase on its own line. Play the song and tap “Sync next line” as each phrase begins. After syncing once, the lyrics highlight automatically on replay.</p>
-
-<label for="lyricsInput">Lyrics — one line per phrase</label>
-
-<textarea id="lyricsInput" placeholder="Paste your lyrics here, with each sung phrase on its own line."></textarea>
-
-<div class="grid">
-
-<div><label for="fontSize">Lyric display size</label><input id="fontSize" type="number" min="16" max="56" value="27"></div>
-
-<div><label for="leadTime">Highlight lead time (seconds)</label><input id="leadTime" type="number" min="0" max="3" step=".1" value="0"></div>
-
-</div>
-
-<div class="actions">
-
-<button id="prepareLyrics" class="secondary">Prepare lyric lines</button>
-
-<button id="syncNext" class="teal">Sync next line</button>
-
-<button id="resetSync" class="secondary">Reset timing</button>
-
-</div>
-
-<div id="lyricStatus" class="status">Paste lyrics and select Prepare lyric lines.</div>
-
-<div class="lyrics-screen" id="lyricsScreen">
-
-<div class="prev">Previous line</div><div class="current">Your lyrics appear here</div><div class="next">Next line</div>
+  <div class="note">This starter profile is stored in your browser on this device. It is not secure online authentication and does not sync between devices. Do not reuse an important password.</div>
 
 </div>
 
 </section>
 
-<section class="card" id="karaokeCard">
+<!-- SCREEN 2 -->
 
-<h2>3. Karaoke Player</h2>
+<section class="screen" id="s1">
 
-<p>Play the song and follow the large lyric display. Sync your lyrics once, and timing is remembered in this browser.</p>
+<div class="card">
 
-<button class="bigplay teal" id="karaokePlay">▶ Play karaoke</button>
+  <h1>Set up your song</h1>
 
-<div class="actions"><button class="secondary" id="karaokeStop">Stop</button><button class="secondary" id="karaokeReset">Start from beginning</button></div>
+  <p>Upload the instrumental music and add your lyrics.</p>
 
-<div id="karaokeStatus" class="status">Upload a song and prepare your lyrics.</div>
+  <label for="songTitle">Song title</label>
 
-</section>
+  <input id="songTitle" placeholder="My New Song">
 
-<section class="card" id="recordCard">
+  <label for="musicFile">Instrumental MP3 or audio file</label>
 
-<h2>4. Record Your Voice</h2>
+  <input id="musicFile" type="file" accept="audio/*">
 
-<p>Allow microphone access, then sing along with the backing track. Recording uses your browser's microphone and audio recording support.</p>
+  <div class="small" id="musicInfo">No music selected.</div>
 
-<div class="grid">
+  <audio id="musicPreview" controls class="hidden"></audio>
 
-<div><label for="countdown">Countdown before recording</label><select id="countdown"><option value="0">No countdown</option><option value="3">3 seconds</option><option value="5">5 seconds</option><option value="10">10 seconds</option></select></div>
+  <label for="lyricsFile">Import lyrics from a text file</label>
 
-<div><label for="micGain">Microphone gain</label><input id="micGain" type="number" min=".1" max="4" step=".1" value="1"></div>
+  <input id="lyricsFile" type="file" accept=".txt,text/plain">
 
-</div>
+  <label for="lyricsInput">Or type/paste your lyrics</label>
 
-<div class="actions"><button class="teal" id="recordBtn">● Start recording</button><button class="danger" id="stopBtn" disabled>■ Stop recording</button></div>
+  <textarea id="lyricsInput" placeholder="Put each sung line on a separate line..."></textarea>
 
-<div id="recordStatus" class="status">Your recording will appear below when you stop.</div>
+  <div class="note">Use an instrumental-only track. This app does not remove vocals. Automatic timing is estimated first; you can sync each lyric line manually.</div>
 
-<audio id="takeAudio" controls></audio>
+  <div class="actions">
 
-<div class="actions"><a id="downloadTake" class="download secondary" hidden>Download original take</a></div>
+    <button class="secondary" id="back0">Back</button>
 
-</section>
+    <button id="prepare">Next: Karaoke →</button>
 
-<section class="card" id="enhanceCard">
+  </div>
 
-<h2>5. Vocal Effects and Mix</h2>
-
-<p>Adjust the vocal sound and preview your recording with the backing track.</p>
-
-<label class="check"><input id="enhance" type="checkbox" checked> Enable vocal enhancement</label>
-
-<div class="grid">
-
-<div><label for="eqLow">High-pass filter (Hz)</label><input id="eqLow" type="number" min="20" max="250" value="80"></div>
-
-<div><label for="compAmount">Compression ratio</label><input id="compAmount" type="number" min="1" max="12" step=".5" value="3"></div>
-
-<div><label for="reverb">Reverb amount (0–1)</label><input id="reverb" type="number" min="0" max="1" step=".05" value=".15"></div>
+  <div class="status" id="setupStatus"></div>
 
 </div>
 
-<div class="mixrow"><label for="vocalVolume">Vocal playback volume</label><span id="vocalVolLabel">100%</span></div>
+</section>
 
-<input id="vocalVolume" type="range" min="0" max="150" value="100">
+<!-- SCREEN 3 -->
 
-<div class="mixrow"><label for="musicVolume">Backing track volume</label><span id="musicVolLabel">45%</span></div>
+<section class="screen" id="s2">
 
-<input id="musicVolume" type="range" min="0" max="100" value="45">
+<div class="card">
 
-<div class="actions"><button id="previewMix" class="teal">▶ Preview vocal + backing</button><button id="stopMix" class="secondary">Stop preview</button></div>
+  <h1 id="karaokeTitle">Karaoke</h1>
 
-<div id="mixStatus" class="status">Record a vocal take to preview the mix.</div>
+  <p>Play the instrumental and watch the current lyric highlight.</p>
+
+  <audio id="karaokeAudio" controls></audio>
+
+  <div class="lyrics" id="karaokeLyrics"></div>
+
+  <div class="progress"><div id="bar"></div></div>
+
+  <p class="small" id="playTime">00:00 / 00:00</p>
+
+  <div class="actions">
+
+    <button class="secondary" id="estimate">Estimate timing</button>
+
+    <button id="startSync">Start sync pass</button>
+
+  </div>
+
+  <div class="actions">
+
+    <button class="green" id="syncNext" disabled>Sync next line</button>
+
+    <button class="secondary" id="finishSync" disabled>Finish sync</button>
+
+  </div>
+
+  <div class="note">For more accurate timing, start the sync pass and tap “Sync next line” at the beginning of each sung line.</div>
+
+  <div class="status" id="syncStatus"></div>
+
+  <div class="actions">
+
+    <button class="secondary" id="back1">Back</button>
+
+    <button id="toRecord">Next: Record →</button>
+
+  </div>
+
+</div>
 
 </section>
 
-<section class="card" id="exportCard">
+<!-- SCREEN 4 -->
 
-<h2>6. Export Your Recording</h2>
+<section class="screen" id="s3">
 
-<p>Download your vocal take, or convert it to MP3. This export is the recorded vocal by itself, not a combined vocal-plus-instrumental file.</p>
+<div class="card">
 
-<div class="actions"><button id="exportMp3" class="teal" disabled>Export vocal as MP3</button><button id="exportMp3Bottom" class="secondary" disabled>Export MP3 again</button></div>
+  <h1>Record your voice 🎙️</h1>
 
-<div id="exportStatus" class="status">Record your voice first to enable export.</div>
+  <p>Wear headphones so the instrumental does not bleed into your microphone.</p>
+
+  <div class="lyrics" id="recordLyrics"></div>
+
+  <audio id="recordAudio" controls></audio>
+
+  <h1 id="recordClock">00:00</h1>
+
+  <div class="actions">
+
+    <button class="green" id="startRecord">● Record</button>
+
+    <button id="stopRecord" disabled>■ Stop</button>
+
+  </div>
+
+  <div class="status" id="recordStatus"></div>
+
+  <audio id="voicePreview" controls class="hidden"></audio>
+
+  <div class="actions">
+
+    <button class="secondary" id="back2">Back</button>
+
+    <button id="toExport">Next: Export →</button>
+
+  </div>
+
+</div>
+
+</section>
+
+<!-- SCREEN 5 -->
+
+<section class="screen" id="s4">
+
+<div class="card">
+
+  <h1>Review your song</h1>
+
+  <p>Listen to your recorded voice and instrumental, then create your combined mix.</p>
+
+  <label>Recorded voice</label>
+
+  <audio id="reviewVoice" controls></audio>
+
+  <label>Instrumental</label>
+
+  <audio id="reviewMusic" controls></audio>
+
+  <div class="note">This version exports the combined song as WAV. MP3 encoding, MP4 lyric video creation, and AI voice enhancement are not included yet.</div>
+
+  <div class="actions">
+
+    <button class="secondary" id="back3">Back</button>
+
+    <button id="makeMix">Create finished mix</button>
+
+  </div>
+
+  <div class="status" id="exportStatus"></div>
+
+  <div id="downloads"></div>
+
+  <div class="actions">
+
+    <button class="secondary" id="newSong">New song</button>
+
+    <button class="secondary" id="switchUser">Switch profile</button>
+
+  </div>
+
+</div>
 
 </section>
 
 </main>
 
-</div>
+<footer>MyVoice Studio · Your music, your way</footer>
 
-<footer>MyVoice Studio · Your session and lyrics are saved locally in this browser when possible.</footer>
+<script>
 
-<script type="module">
+(() => {
 
-const $=id=>document.getElementById(id);
+'use strict';
 
-let STORAGE_KEY="myvoice-studio-session-v2-anonymous";
+const $ = id => document.getElementById(id);
 
-let currentProfile="";
+const screens = [...document.querySelectorAll('.screen')];
 
-let originalURL=null,activeURL=null,sourceFile=null,stemURLs=[],separator=null;
+const dots = [...document.querySelectorAll('.steps div')];
 
-let lyricLines=[],timings=[],activeLine=-1,takeBlob=null,takeURL=null;
+const S = {
 
-let audioCtx=null,micStream=null,mediaRecorder=null,recordedChunks=[],recorderNodes=[],isSeparating=false;
+  user:'', title:'', file:null, url:null, duration:0,
 
-let musicSource=null,musicGain=null,monitorGain=null,micGainNode=null,compressor=null,highpass=null,reverbNode=null,dryNode=null,wetNode=null,recordDestination=null,recordingStream=null;
+  lines:[], times:[], syncIndex:0, syncing:false,
 
-const music=$("music");
+  recorder:null, stream:null, chunks:[], voiceBlob:null, voiceURL:null,
 
-function setStatus(id,msg){$(id).textContent=msg}
-
-function revoke(url){if(url&&url.startsWith("blob:"))URL.revokeObjectURL(url)}
-
-function safeSave(){
-
- try{localStorage.setItem(STORAGE_KEY,JSON.stringify({lyrics:$("lyricsInput").value,lines:lyricLines,timings,activeLine,fontSize:$("fontSize").value,leadTime:$("leadTime").value,model:$("modelChoice").value}))}
-
- catch(e){setStatus("lyricStatus","Session is active, but this browser could not save it automatically. Tap Save session.")}
-
-}
-
-function restoreSession(){
-
- try{
-
-  const d=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
-
-  if(!d)return;
-
-  $("lyricsInput").value=d.lyrics||"";
-
-  lyricLines=Array.isArray(d.lines)?d.lines:[];
-
-  timings=Array.isArray(d.timings)?d.timings:[];
-
-  activeLine=Number.isInteger(d.activeLine)?d.activeLine:-1;
-
-  $("fontSize").value=d.fontSize||27;
-
-  $("leadTime").value=d.leadTime||0;
-
-  if(d.model)$("modelChoice").value=d.model;
-
-  renderLyrics();
-
-  if(lyricLines.length)setStatus("lyricStatus","Restored "+lyricLines.length+" lyric lines and "+timings.length+" timing marks from this browser.");
-
- }catch{}
-
-}
-
-function setSong(file){
-
- if(!file)return;
-
- revoke(originalURL);
-
- originalURL=URL.createObjectURL(file);
-
- sourceFile=file;
-
- activeURL=originalURL;
-
- music.src=originalURL;
-
- music.load();
-
- setStatus("musicStatus","Loaded: "+file.name);
-
- $("separateBtn").disabled=false;
-
-}
-
-$("musicFile").addEventListener("change",e=>setSong(e.target.files[0]));
-
-$("restoreOriginal").onclick=()=>{
-
- if(!originalURL)return setStatus("musicStatus","Choose an original song first.");
-
- music.src=originalURL;activeURL=originalURL;music.load();setStatus("musicStatus","Using original song.")
+  clock:null
 
 };
 
-function renderLyrics(){
+function show(n) {
 
- const screen=$("lyricsScreen");
+  screens.forEach((el,i)=>el.classList.toggle('active',i===n));
 
- screen.replaceChildren();
+  dots.forEach((el,i)=>el.classList.toggle('on',i<=n));
 
- const prev=document.createElement("div");
+  window.scrollTo({top:0,behavior:'smooth'});
 
- prev.className="prev";
+  if(n===2) drawLyrics('karaokeLyrics');
 
- prev.textContent=activeLine>0?lyricLines[activeLine-1]:"Previous line";
+  if(n===3) drawLyrics('recordLyrics');
 
- const cur=document.createElement("div");
+  if(n===4) {
 
- cur.className="current";
+    if(S.voiceURL) $('reviewVoice').src=S.voiceURL;
 
- cur.style.fontSize=Math.max(16,Math.min(56,Number($("fontSize").value)||27))+"px";
-
- cur.textContent=lyricLines[activeLine]||lyricLines[0]||"Your lyrics appear here";
-
- const next=document.createElement("div");
-
- next.className="next";
-
- next.textContent=activeLine>=0&&activeLine<lyricLines.length-1?lyricLines[activeLine+1]:"Next line";
-
- screen.append(prev,cur,next);
-
-}
-
-function prepareLines(){
-
- lyricLines=$("lyricsInput").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-
- timings=[];activeLine=lyricLines.length?0:-1;
-
- renderLyrics();
-
- setStatus("lyricStatus",lyricLines.length+" lyric lines prepared. Play the song and tap Sync next line at the start of each phrase.");
-
- safeSave();
-
-}
-
-$("prepareLyrics").onclick=prepareLines;
-
-$("syncNext").onclick=()=>{
-
- if(!music.src||!lyricLines.length)return setStatus("lyricStatus","Upload a song and prepare your lyric lines first.");
-
- if(activeLine<0)activeLine=0;
-
- if(activeLine>=lyricLines.length)return setStatus("lyricStatus","All lines have been synced. Reset timing to start again.");
-
- timings[activeLine]=Math.max(0,music.currentTime-(Number($("leadTime").value)||0));
-
- setStatus("lyricStatus","Synced line "+(activeLine+1)+" at "+timings[activeLine].toFixed(2)+" seconds.");
-
- activeLine++;
-
- if(activeLine>=lyricLines.length)activeLine=lyricLines.length-1;
-
- renderLyrics();safeSave();
-
-};
-
-$("resetSync").onclick=()=>{timings=[];activeLine=0;renderLyrics();setStatus("lyricStatus","Timing reset. Play the song and sync each line again.");safeSave()};
-
-$("fontSize").onchange=renderLyrics;
-
-$("lyricsInput").addEventListener("input",()=>{});
-
-$("saveSession").onclick=()=>{safeSave();setStatus("lyricStatus","Lyrics and timing saved in this browser.")};
-
-$("clearSession").onclick=()=>{
-
- if(!confirm("Clear saved lyrics and timing from this browser?"))return;
-
- localStorage.removeItem(STORAGE_KEY);lyricLines=[];timings=[];activeLine=-1;$("lyricsInput").value="";renderLyrics();setStatus("lyricStatus","Saved lyric session cleared.")
-
-};
-
-music.addEventListener("timeupdate",()=>{
-
- if(!lyricLines.length||!timings.length)return;
-
- let current=-1;
-
- for(let i=0;i<timings.length;i++){if(typeof timings[i]==="number"&&music.currentTime>=timings[i])current=i}
-
- if(current>=0&&current!==activeLine){activeLine=current;renderLyrics()}
-
-});
-
-$("karaokePlay").onclick=async()=>{
-
- try{if(!music.src)return setStatus("karaokeStatus","Upload a song first.");await music.play();$("karaokePlay").textContent="▶ Playing karaoke";setStatus("karaokeStatus","Playing. Your lyrics will highlight when timing is available.")}
-
- catch(e){setStatus("karaokeStatus","Could not play audio: "+(e?.message||e))}
-
-};
-
-$("karaokeStop").onclick=()=>{music.pause();$("karaokePlay").textContent="▶ Play karaoke"};
-
-$("karaokeReset").onclick=()=>{music.pause();music.currentTime=0;activeLine=0;renderLyrics();$("karaokePlay").textContent="▶ Play karaoke";setStatus("karaokeStatus","Song reset to the beginning.")};
-
-async function createSeparator(model,opts){
-
- const lib=await import("https://esm.sh/web-audio-separation@0.3.1?bundle");
-
- if(typeof lib.createSeparator!=="function")throw new Error("The vocal-separation library did not provide the expected API. Try again later or use an external vocal-removal tool.");
-
- return lib.createSeparator(model,opts);
-
-}
-
-$("separateBtn").onclick=async()=>{
-
- if(!sourceFile)return setStatus("sepStatus","Upload an audio file first.");
-
- if(isSeparating)return;
-
- isSeparating=true;$("separateBtn").disabled=true;$("sepProgress").hidden=false;$("sepProgress").value=5;
-
- setStatus("sepStatus","Loading the AI separation library. The first run may take a while.");
-
- try{
-
-  const model=$("modelChoice").value;
-
-  separator=await createSeparator(model,{common:{logLevel:"warning"},mdx:{segmentSize:256,overlap:0.25,batchSize:1,hopLength:1024,executionProviders:["webgpu","wasm"]}});
-
-  $("sepProgress").value=25;
-
-  if(typeof separator.loadModel==="function")await separator.loadModel();
-
-  $("sepProgress").value=55;
-
-  setStatus("sepStatus","Separating the audio. Keep this page open.");
-
-  const result=await separator.separate(originalURL);
-
-  $("sepProgress").value=90;
-
-  const entries=Array.isArray(result)?result:Object.entries(result||{}).map(([name,value])=>({name,value}));
-
-  $("stemList").replaceChildren();
-
-  let count=0;
-
-  for(const item of entries){
-
-   const value=item?.value??item?.audio??item?.blob??item?.url;
-
-   if(!value)continue;
-
-   let blob=value instanceof Blob?value:null;
-
-   if(!blob&&value instanceof ArrayBuffer)blob=new Blob([value],{type:"audio/wav"});
-
-   if(!blob&&ArrayBuffer.isView(value))blob=new Blob([value],{type:"audio/wav"});
-
-   if(!blob&&typeof value==="string"&&value.startsWith("blob:")){const r=await fetch(value);blob=await r.blob()}
-
-   if(!blob)continue;
-
-   const url=URL.createObjectURL(blob);stemURLs.push(url);
-
-   const row=document.createElement("div");row.className="card";
-
-   const name=document.createElement("p");name.textContent=item.name||item.label||"Audio output";
-
-   const audio=document.createElement("audio");audio.controls=true;audio.src=url;
-
-   const use=document.createElement("button");use.className="secondary";use.textContent="Use this output";use.onclick=()=>{activeURL=url;music.src=url;music.load();setStatus("musicStatus","Using separated audio output: "+name.textContent)};
-
-   row.append(name,audio,use);$("stemList").append(row);count++;
+    if(S.url) $('reviewMusic').src=S.url;
 
   }
 
-  $("sepProgress").value=100;
+}
 
-  $("stemResults").hidden=count===0;
+function msg(id,text){$(id).textContent=text;}
 
-  setStatus("sepStatus",count?"Separation finished. Choose an output to use in the studio.":"The library returned no usable audio outputs. The separation API may have changed; try another model or another vocal-removal tool.");
+function clock(t) {
 
- }catch(e){
+  t=Math.max(0,Number(t)||0);
 
-  console.error(e);
-
-  setStatus("sepStatus","Separation could not complete: "+(e?.message||e)+". This browser/library combination may not be supported.");
-
- }finally{isSeparating=false;$("separateBtn").disabled=false}
-
-};
-
-function makeReverb(ctx){
-
- const length=ctx.sampleRate*1.4;
-
- const impulse=ctx.createBuffer(2,length,ctx.sampleRate);
-
- for(let c=0;c<2;c++){const data=impulse.getChannelData(c);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/length,2.5)}
-
- const convolver=ctx.createConvolver();convolver.buffer=impulse;return convolver;
+  return String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
 
 }
 
-async function ensureAudio(){
+function safeFileName(s) {
 
- if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-
- if(audioCtx.state==="suspended")await audioCtx.resume();
-
- if(!musicSource){
-
-  try{musicSource=audioCtx.createMediaElementSource(music);musicGain=audioCtx.createGain();musicGain.gain.value=Number($("musicVolume").value)/100;musicSource.connect(musicGain);musicGain.connect(audioCtx.destination)}catch(e){}
-
- }
+  return (s||'myvoice-song').replace(/[^\w-]+/g,'-').slice(0,60)||'myvoice-song';
 
 }
 
-async function startRecording(){
+function parseLyrics(text) {
 
- if(!navigator.mediaDevices?.getUserMedia)throw new Error("Microphone recording is not supported in this browser.");
-
- await ensureAudio();
-
- micStream=await navigator.mediaDevices.getUserMedia({audio:true});
-
- const input=audioCtx.createMediaStreamSource(micStream);
-
- highpass=audioCtx.createBiquadFilter();highpass.type="highpass";highpass.frequency.value=$("enhance").checked?Number($("eqLow").value):20;
-
- compressor=audioCtx.createDynamicsCompressor();compressor.threshold.value=-22;compressor.knee.value=18;compressor.ratio.value=$("enhance").checked?Number($("compAmount").value):1;compressor.attack.value=.008;compressor.release.value=.18;
-
- micGainNode=audioCtx.createGain();micGainNode.gain.value=Math.max(.1,Math.min(4,Number($("micGain").value)||1));
-
- dryNode=audioCtx.createGain();wetNode=audioCtx.createGain();monitorGain=audioCtx.createGain();monitorGain.gain.value=Number($("vocalVolume").value)/100;
-
- reverbNode=makeReverb(audioCtx);recordDestination=audioCtx.createMediaStreamDestination();
-
- input.connect(highpass);highpass.connect(compressor);compressor.connect(micGainNode);
-
- micGainNode.connect(dryNode);dryNode.connect(monitorGain);micGainNode.connect(reverbNode);reverbNode.connect(wetNode);
-
- wetNode.gain.value=Number($("reverb").value);wetNode.connect(monitorGain);
-
- monitorGain.connect(audioCtx.destination);monitorGain.connect(recordDestination);
-
- recordingStream=recordDestination.stream;recordedChunks=[];takeBlob=null;
-
- const type=["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(t=>MediaRecorder.isTypeSupported(t));
-
- mediaRecorder=type?new MediaRecorder(recordingStream,{mimeType:type}):new MediaRecorder(recordingStream);
-
- mediaRecorder.ondataavailable=e=>{if(e.data?.size)recordedChunks.push(e.data)};
-
- mediaRecorder.onstop=()=>{
-
-  takeBlob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||"audio/webm"});
-
-  revoke(takeURL);takeURL=URL.createObjectURL(takeBlob);
-
-  $("takeAudio").src=takeURL;$("downloadTake").href=takeURL;
-
-  $("downloadTake").download="myvoice-vocals."+(takeBlob.type.includes("mp4")?"m4a":"webm");
-
-  $("downloadTake").hidden=false;$("exportMp3").disabled=false;$("exportMp3Bottom").disabled=false;
-
-  setStatus("recordStatus","Vocal take saved. Play it back or export MP3.");
-
-  if(micStream)micStream.getTracks().forEach(t=>t.stop());micStream=null;
-
- };
-
- mediaRecorder.start(250);
-
- if(music.paused){music.currentTime=0;await music.play()}
-
- setStatus("recordStatus","Recording vocal… sing along with the karaoke track.");
+  return text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
 
 }
 
-$("recordBtn").onclick=async()=>{
+function saveProject() {
 
- try{$("recordBtn").disabled=true;const n=Number($("countdown").value)||0;if(n){setStatus("recordStatus","Starting in "+n+" seconds…");await new Promise(r=>setTimeout(r,n*1000))}await startRecording();$("stopBtn").disabled=false}
+  try {
 
- catch(e){console.error(e);setStatus("recordStatus","Could not record: "+(e?.message||e));$("recordBtn").disabled=false}
+    localStorage.setItem('myvoice_project_'+S.user,JSON.stringify({
 
-};
+      title:S.title,lines:S.lines,times:S.times
 
-$("stopBtn").onclick=()=>{if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();music.pause();$("recordBtn").disabled=false;$("stopBtn").disabled=true};
+    }));
 
-$("enhance").onchange=()=>{if(highpass)highpass.frequency.value=$("enhance").checked?Number($("eqLow").value):20;if(compressor)compressor.ratio.value=$("enhance").checked?Number($("compAmount").value):1};
-
-$("eqLow").onchange=()=>{if(highpass)highpass.frequency.value=$("enhance").checked?Number($("eqLow").value):20};
-
-$("compAmount").onchange=()=>{if(compressor)compressor.ratio.value=$("enhance").checked?Number($("compAmount").value):1};
-
-$("reverb").onchange=()=>{if(wetNode)wetNode.gain.value=Number($("reverb").value)};
-
-$("vocalVolume").oninput=()=>{$("vocalVolLabel").textContent=$("vocalVolume").value+"%";if(monitorGain)monitorGain.gain.value=Number($("vocalVolume").value)/100};
-
-$("musicVolume").oninput=()=>{$("musicVolLabel").textContent=$("musicVolume").value+"%";if(musicGain)musicGain.gain.value=Number($("musicVolume").value)/100};
-
-$("previewMix").onclick=async()=>{
-
- try{
-
-  if(!takeBlob)return setStatus("mixStatus","Record a vocal take first.");
-
-  await ensureAudio();
-
-  const clip=new Audio(takeURL);
-
-  clip.volume=Math.max(0,Math.min(1,Number($("vocalVolume").value)/100));
-
-  await clip.play();await music.play();window.__mvPreview=clip;
-
-  setStatus("mixStatus","Previewing vocal and backing together. Use the volume sliders to balance playback.");
-
- }catch(e){setStatus("mixStatus","Tap play on both audio players if the browser blocks automatic playback.")}
-
-};
-
-$("stopMix").onclick=()=>{if(window.__mvPreview)window.__mvPreview.pause();music.pause();setStatus("mixStatus","Mix preview stopped.")};
-
-async function blobToBuffer(blob){
-
- const C=window.AudioContext||window.webkitAudioContext;const ctx=new C();
-
- try{return await ctx.decodeAudioData(await blob.arrayBuffer())}finally{await ctx.close()}
+  } catch(e) {}
 
 }
 
-async function exportMP3(){
+function estimate() {
 
- if(!takeBlob)return;
+  if(!S.lines.length||!S.duration)return;
 
- if(!window.lamejs)return setStatus("exportStatus","MP3 encoder did not load. Reload with internet access.");
+  const weights=S.lines.map(line=>Math.max(1,line.split(/\s+/).length));
 
- $("exportMp3").disabled=true;$("exportMp3Bottom").disabled=true;setStatus("exportStatus","Encoding MP3…");
+  const total=weights.reduce((a,b)=>a+b,0);
 
- try{
+  let sum=0;
 
-  const b=await blobToBuffer(takeBlob),channels=Math.min(2,b.numberOfChannels),l=b.getChannelData(0),r=channels>1?b.getChannelData(1):l;
+  S.times=weights.map(w=>{
 
-  const enc=new lamejs.Mp3Encoder(channels,b.sampleRate,192),parts=[],size=1152;
+    const t=sum/total*S.duration;
 
-  for(let i=0;i<l.length;i+=size){
+    sum+=w;
 
-   const end=Math.min(i+size,l.length);
+    return t;
 
-   const convert=d=>{const a=new Int16Array(end-i);for(let j=i;j<end;j++){const v=Math.max(-1,Math.min(1,d[j]));a[j-i]=v<0?v*32768:v*32767}return a};
+  });
 
-   const chunk=channels>1?enc.encodeBuffer(convert(l),convert(r)):enc.encodeBuffer(convert(l));
+  drawLyrics('karaokeLyrics');
 
-   if(chunk.length)parts.push(new Uint8Array(chunk));
+  msg('syncStatus','Estimated timings created. Correct them using the sync controls.');
+
+  saveProject();
+
+}
+
+function activeLine(t) {
+
+  let index=0;
+
+  for(let i=0;i<S.times.length;i++) {
+
+    if(t>=S.times[i])index=i;
+
+    else break;
 
   }
 
-  const last=enc.flush();if(last.length)parts.push(new Uint8Array(last));
-
-  const blob=new Blob(parts,{type:"audio/mpeg"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-
-  a.href=url;a.download="myvoice-vocals.mp3";a.click();setTimeout(()=>revoke(url),60000);
-
-  setStatus("exportStatus","Vocal MP3 exported. Note: this exports the vocal take, not a final combined vocal-plus-instrumental mix.");
-
- }catch(e){setStatus("exportStatus","MP3 export failed: "+(e?.message||e))}
-
- finally{$("exportMp3").disabled=false;$("exportMp3Bottom").disabled=false}
+  return index;
 
 }
 
-$("exportMp3").onclick=exportMP3;$("exportMp3Bottom").onclick=exportMP3;
+function drawLyrics(id,t) {
 
-music.addEventListener("ended",()=>{$("karaokePlay").textContent="▶ Play karaoke";activeLine=-1;renderLyrics()});
+  const box=$(id);box.replaceChildren();
 
-// Local browser profiles: names are remembered on this device, not synced between devices.
+  if(!S.lines.length) {
 
-const PROFILE_LIST_KEY="myvoice-studio-local-profiles-v1";
+    const d=document.createElement('div');
 
-const LAST_PROFILE_KEY="myvoice-studio-last-profile-v1";
+    d.className='line current';d.textContent='Your lyrics will appear here.';
 
-function safeProfileName(v){return String(v||"").trim().replace(/\s+/g," ").slice(0,40)}
+    box.append(d);return;
 
-function beginProfile(name){
+  }
 
- currentProfile=safeProfileName(name);
+  const player=id==='recordLyrics'?$ ('recordAudio'):$('karaokeAudio');
 
- if(!currentProfile)return;
+  const now=Number.isFinite(t)?t:(player.currentTime||0);
 
- STORAGE_KEY="myvoice-studio-session-v2-"+currentProfile.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  const current=activeLine(now);
 
- try{
+  for(let i=Math.max(0,current-1);i<Math.min(S.lines.length,current+3);i++) {
 
-  localStorage.setItem(LAST_PROFILE_KEY,currentProfile);
+    const d=document.createElement('div');
 
-  let names=JSON.parse(localStorage.getItem(PROFILE_LIST_KEY)||"[]");
+    d.className='line '+(i===current?'current':i<current?'past':'');
 
-  if(!names.includes(currentProfile)){names.push(currentProfile);localStorage.setItem(PROFILE_LIST_KEY,JSON.stringify(names))}
+    d.textContent=S.lines[i];box.append(d);
 
- }catch(e){}
-
- $("welcomeTitle").textContent="Welcome back, "+currentProfile+"!";
-
- $("welcomeScreen").classList.add("hidden");
-
- $("appShell").classList.remove("hidden");
-
- $("newProjectTop").classList.remove("hidden");
-
- $("logoutBtn").classList.remove("hidden");
-
- $("projectTitle").textContent=currentProfile+"'s Studio";
-
- $("projectSubtitle").textContent="Create a project, prepare your karaoke track, and record.";
-
- restoreSession();renderLyrics();
-
- setStatus("musicStatus","Choose Create New Project to upload a song.");
+  }
 
 }
 
-$("loginBtn").onclick=()=>{
+function updatePlayer(player,id) {
 
- const name=safeProfileName($("profileName").value);
+  const t=player.currentTime||0,d=player.duration||S.duration||0;
 
- if(!name){$("profileName").focus();return}
+  if(id==='karaokeLyrics') {
 
- beginProfile(name);
+    $('bar').style.width=(d?100*t/d:0)+'%';
 
-};
+    $('playTime').textContent=clock(t)+' / '+clock(d);
 
-$("profileName").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
+  }
 
-$("newProjectTop").onclick=()=>{
+  drawLyrics(id,t);
 
- document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+}
 
- $("songCard").classList.remove("hidden");
+$('enter').onclick=()=>{
 
- $("projectTitle").textContent="New Project";
+  const name=$('username').value.trim(),pass=$('password').value;
 
- $("projectSubtitle").textContent="Upload your song first, then prepare the instrumental and lyrics.";
+  if(!name||!pass){msg('loginStatus','Enter a profile name and password.');return;}
 
- $("projectStatus").textContent="Upload a song";
+  S.user=name.toLowerCase();
 
- $("songCard").scrollIntoView({behavior:"smooth",block:"start"});
+  const key='myvoice_profile_'+S.user,old=localStorage.getItem(key);
 
-};
+  if(old) {
 
-$("logoutBtn").onclick=()=>{
+    try {
 
- safeSave();currentProfile="";
+      if(JSON.parse(old).password!==pass) {
 
- $("appShell").classList.add("hidden");$("welcomeScreen").classList.remove("hidden");
+        msg('loginStatus','Password does not match this local profile.');return;
 
- $("newProjectTop").classList.add("hidden");$("logoutBtn").classList.add("hidden");
+      }
 
- const remembered=localStorage.getItem(LAST_PROFILE_KEY)||"";
+    } catch(e){}
 
- $("profileName").value=remembered;
+  } else {
 
- $("welcomeTitle").textContent=remembered?"Welcome back, "+remembered+"!":"Welcome to MyVoice Studio!";
+    localStorage.setItem(key,JSON.stringify({name,password:pass}));
 
-};
+  }
 
-document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>{
+  msg('loginStatus','Welcome, '+name+'!');
 
- document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b===btn));
-
- const target=$(btn.dataset.target);
-
- if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
-
-}));
-
-// Reveal the project tools after a song is chosen.
-
-const originalSetSong=setSong;
-
-setSong=function(file){
-
- originalSetSong(file);
-
- if(file){
-
-  document.querySelectorAll(".card").forEach(c=>c.classList.remove("hidden"));
-
-  $("projectTitle").textContent=file.name.replace(/\.[^.]+$/,"");
-
-  $("projectSubtitle").textContent="Prepare the karaoke track, sync lyrics, then record your voice.";
-
-  $("projectStatus").textContent="Song uploaded";
-
- }
+  show(1);
 
 };
 
-$("musicFile").addEventListener("change",()=>{
+$('back0').onclick=()=>show(0);
 
- if(sourceFile){document.querySelectorAll(".card").forEach(c=>c.classList.remove("hidden"));$("projectStatus").textContent="Song uploaded"}
+$('musicFile').onchange=()=>{
+
+  const f=$('musicFile').files[0];if(!f)return;
+
+  if(S.url)URL.revokeObjectURL(S.url);
+
+  S.file=f;S.url=URL.createObjectURL(f);
+
+  $('musicInfo').textContent=f.name+' ('+(f.size/1048576).toFixed(2)+' MB)';
+
+  $('musicPreview').src=S.url;$('musicPreview').classList.remove('hidden');
+
+  $('musicPreview').onloadedmetadata=()=>{
+
+    S.duration=$('musicPreview').duration||0;
+
+    msg('setupStatus','Music loaded: '+clock(S.duration));
+
+  };
+
+};
+
+$('lyricsFile').onchange=async()=>{
+
+  const f=$('lyricsFile').files[0];
+
+  if(f)$('lyricsInput').value=await f.text();
+
+};
+
+$('prepare').onclick=()=>{
+
+  if(!S.file||!S.url){msg('setupStatus','Please select an instrumental audio file.');return;}
+
+  S.title=$('songTitle').value.trim()||'My Song';
+
+  S.lines=parseLyrics($('lyricsInput').value);
+
+  if(!S.lines.length){msg('setupStatus','Please add your lyrics.');return;}
+
+  S.duration=$('musicPreview').duration||S.duration;
+
+  if(!S.duration){msg('setupStatus','Wait for the music to finish loading.');return;}
+
+  $('karaokeTitle').textContent=S.title+' — Karaoke';
+
+  $('karaokeAudio').src=S.url;
+
+  $('recordAudio').src=S.url;
+
+  $('reviewMusic').src=S.url;
+
+  estimate();
+
+  show(2);
+
+};
+
+$('estimate').onclick=estimate;
+
+$('startSync').onclick=()=>{
+
+  if(!S.lines.length)return;
+
+  S.times=S.lines.map((_,i)=>S.times[i]||0);
+
+  S.syncIndex=0;S.syncing=true;
+
+  $('syncNext').disabled=false;$('finishSync').disabled=false;$('startSync').disabled=true;
+
+  $('karaokeAudio').currentTime=0;
+
+  $('karaokeAudio').play().catch(()=>msg('syncStatus','Tap Play on the music player to start.'));
+
+  msg('syncStatus','Tap Sync next line at the beginning of each lyric line.');
+
+};
+
+$('syncNext').onclick=()=>{
+
+  if(!S.syncing)return;
+
+  if(S.syncIndex>=S.lines.length)return;
+
+  S.times[S.syncIndex]=$('karaokeAudio').currentTime;
+
+  S.syncIndex++;saveProject();drawLyrics('karaokeLyrics');
+
+  msg('syncStatus','Saved '+S.syncIndex+' of '+S.lines.length+' lines.');
+
+  if(S.syncIndex>=S.lines.length) {
+
+    $('syncNext').disabled=true;
+
+    msg('syncStatus','All lines recorded. Tap Finish sync.');
+
+  }
+
+};
+
+$('finishSync').onclick=()=>{
+
+  S.syncing=false;$('karaokeAudio').pause();
+
+  $('syncNext').disabled=true;$('finishSync').disabled=true;$('startSync').disabled=false;
+
+  saveProject();drawLyrics('karaokeLyrics');
+
+  msg('syncStatus','Sync saved. Replay the song to check the highlights.');
+
+};
+
+$('back1').onclick=()=>show(1);
+
+$('toRecord').onclick=()=>{
+
+  if(S.syncing){msg('syncStatus','Tap Finish sync before continuing.');return;}
+
+  show(3);
+
+};
+
+$('back2').onclick=()=>show(2);
+
+$('toExport').onclick=()=>{
+
+  if(!S.voiceBlob){msg('recordStatus','Please record your voice first.');return;}
+
+  show(4);
+
+};
+
+['karaokeAudio','recordAudio'].forEach(id=>{
+
+  $(id).addEventListener('timeupdate',()=>updatePlayer($(id),id==='karaokeAudio'?'karaokeLyrics':'recordLyrics'));
 
 });
 
-// Remember the last name on this device. A new device/browser asks for a name.
+$('startRecord').onclick=async()=>{
 
-try{
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder) {
 
- const remembered=localStorage.getItem(LAST_PROFILE_KEY)||"";
+    msg('recordStatus','Microphone recording is not supported by this browser. Try Safari and allow microphone access.');return;
 
- if(remembered){$("profileName").value=remembered;$("welcomeTitle").textContent="Welcome back, "+remembered+"!"}
+  }
 
- else{$("profileName").value="";$("welcomeTitle").textContent="Welcome to MyVoice Studio!"}
+  try {
 
-}catch{}
+    S.stream=await navigator.mediaDevices.getUserMedia({audio:true});
 
-document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+    let opts={};
 
-$("vocalVolLabel").textContent="100%";$("musicVolLabel").textContent="45%";
+    if(MediaRecorder.isTypeSupported('audio/mp4'))opts.mimeType='audio/mp4';
 
-window.addEventListener("pagehide",()=>{if(currentProfile)safeSave();if(micStream)micStream.getTracks().forEach(t=>t.stop())});
+    else if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))opts.mimeType='audio/webm;codecs=opus';
+
+    S.chunks=[];S.recorder=new MediaRecorder(S.stream,opts);
+
+    S.recorder.ondataavailable=e=>{if(e.data&&e.data.size)S.chunks.push(e.data);};
+
+    S.recorder.onstop=()=>{
+
+      S.voiceBlob=new Blob(S.chunks,{type:S.recorder.mimeType||'audio/webm'});
+
+      if(S.voiceURL)URL.revokeObjectURL(S.voiceURL);
+
+      S.voiceURL=URL.createObjectURL(S.voiceBlob);
+
+      $('voicePreview').src=S.voiceURL;$('voicePreview').classList.remove('hidden');
+
+      $('reviewVoice').src=S.voiceURL;
+
+      S.stream.getTracks().forEach(t=>t.stop());S.stream=null;
+
+      $('startRecord').disabled=false;$('stopRecord').disabled=true;
+
+      clearInterval(S.clock);
+
+      msg('recordStatus','Recording saved. Listen back before exporting.');
+
+    };
+
+    S.recorder.start();S.recordingStart=Date.now();
+
+    $('startRecord').disabled=true;$('stopRecord').disabled=false;
+
+    $('recordAudio').currentTime=0;
+
+    $('recordAudio').play().catch(()=>{});
+
+    S.clock=setInterval(()=>$('recordClock').textContent=clock((Date.now()-S.recordingStart)/1000),250);
+
+    msg('recordStatus','Recording. Sing along with the music and lyrics.');
+
+  } catch(e) {
+
+    msg('recordStatus','Microphone access was denied. Allow microphone access in your browser settings.');
+
+  }
+
+};
+
+$('stopRecord').onclick=()=>{
+
+  if(S.recorder&&S.recorder.state!=='inactive')S.recorder.stop();
+
+  $('recordAudio').pause();
+
+};
+
+function wavBlob(buffer) {
+
+  const channels=buffer.numberOfChannels,rate=buffer.sampleRate,frames=buffer.length,bytes=2,size=frames*channels*bytes;
+
+  const out=new ArrayBuffer(44+size),v=new DataView(out);
+
+  const str=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+
+  str(0,'RIFF');v.setUint32(4,36+size,true);str(8,'WAVE');str(12,'fmt ');
+
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,channels,true);
+
+  v.setUint32(24,rate,true);v.setUint32(28,rate*channels*bytes,true);
+
+  v.setUint16(32,channels*bytes,true);v.setUint16(34,16,true);
+
+  str(36,'data');v.setUint32(40,size,true);
+
+  let offset=44;
+
+  for(let i=0;i<frames;i++)for(let c=0;c<channels;c++) {
+
+    const s=Math.max(-1,Math.min(1,buffer.getChannelData(c)[i]));
+
+    v.setInt16(offset,s<0?s*32768:s*32767,true);offset+=2;
+
+  }
+
+  return new Blob([out],{type:'audio/wav'});
+
+}
+
+function download(blob,name) {
+
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+
+  a.href=url;a.download=name;document.body.append(a);a.click();a.remove();
+
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+
+}
+
+$('makeMix').onclick=async()=>{
+
+  if(!S.voiceBlob||!S.file){msg('exportStatus','A recording and instrumental are required.');return;}
+
+  $('makeMix').disabled=true;$('downloads').replaceChildren();
+
+  msg('exportStatus','Combining your voice and instrumental…');
+
+  let ctx;
+
+  try {
+
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+
+    const decode=async blob=>ctx.decodeAudioData((await blob.arrayBuffer()).slice(0));
+
+    const [music,voice]=await Promise.all([decode(S.file),decode(S.voiceBlob)]);
+
+    const rate=44100,length=Math.ceil(Math.max(music.duration,voice.duration)*rate);
+
+    const offline=new OfflineAudioContext(2,length,rate);
+
+    function add(buf,gainValue) {
+
+      const src=offline.createBufferSource();src.buffer=buf;
+
+      const gain=offline.createGain();gain.gain.value=gainValue;
+
+      src.connect(gain).connect(offline.destination);src.start(0);
+
+    }
+
+    add(music,.85);add(voice,1);
+
+    const result=await offline.startRendering(),blob=wavBlob(result);
+
+    const audio=document.createElement('audio');audio.controls=true;
+
+    audio.src=URL.createObjectURL(blob);audio.style.width='100%';
+
+    const btn=document.createElement('button');
+
+    btn.textContent='Download finished song (WAV)';
+
+    btn.onclick=()=>download(blob,safeFileName(S.title)+'-finished.wav');
+
+    $('downloads').append(audio,btn);
+
+    msg('exportStatus','Your mixed song is ready. WAV export is available below.');
+
+  } catch(e) {
+
+    console.error(e);
+
+    msg('exportStatus','The mix could not be created in this browser. Try again with a standard MP3 instrumental.');
+
+  } finally {
+
+    if(ctx)await ctx.close().catch(()=>{});
+
+    $('makeMix').disabled=false;
+
+  }
+
+};
+
+$('newSong').onclick=()=>{
+
+  $('karaokeAudio').pause();$('recordAudio').pause();
+
+  if(S.url)URL.revokeObjectURL(S.url);if(S.voiceURL)URL.revokeObjectURL(S.voiceURL);
+
+  Object.assign(S,{title:'',file:null,url:null,duration:0,lines:[],times:[],syncIndex:0,syncing:false,voiceBlob:null,voiceURL:null,chunks:[]});
+
+  $('songTitle').value='';$('musicFile').value='';$('lyricsFile').value='';$('lyricsInput').value='';
+
+  $('musicInfo').textContent='No music selected.';$('musicPreview').classList.add('hidden');
+
+  $('voicePreview').classList.add('hidden');$('downloads').replaceChildren();
+
+  msg('setupStatus','');show(1);
+
+};
+
+$('switchUser').onclick=()=>show(0);
+
+})();
 
 </script>
 
