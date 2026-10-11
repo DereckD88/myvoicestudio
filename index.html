@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -45,7 +46,9 @@ body {
 
   margin:0;background:linear-gradient(160deg,#30204a,#100d1c 50%);
 
-  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 
   min-height:100vh;padding-bottom:env(safe-area-inset-bottom)
 
@@ -61,9 +64,17 @@ header{text-align:center;padding:25px 12px 15px}
 
 main{max-width:720px;margin:auto;padding:10px 14px 40px}
 
-.screen{display:none}.screen.active{display:block}
+.screen{display:none}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:14px}
+.screen.active{display:block}
+
+.card {
+
+  background:var(--panel);border:1px solid var(--border);
+
+  border-radius:20px;padding:20px;margin-bottom:14px
+
+}
 
 h1{font-size:25px;margin:0 0 10px}
 
@@ -73,9 +84,11 @@ label{display:block;margin:16px 0 7px;font-size:14px}
 
 input,textarea {
 
-  width:100%;background:#120f20;color:white;border:1px solid #57466d;
+  width:100%;background:#120f20;color:white;
 
-  border-radius:12px;padding:14px;font-size:16px
+  border:1px solid #57466d;border-radius:12px;
+
+  padding:14px;font-size:16px
 
 }
 
@@ -83,9 +96,11 @@ textarea{min-height:180px;line-height:1.5}
 
 button {
 
-  background:var(--purple);color:#171025;font-weight:800;border:0;
+  background:var(--purple);color:#171025;font-weight:800;
 
-  border-radius:12px;padding:14px;font-size:15px;cursor:pointer
+  border:0;border-radius:12px;padding:14px;
+
+  font-size:15px;cursor:pointer
 
 }
 
@@ -101,9 +116,21 @@ button:disabled{opacity:.45}
 
 audio{width:100%;margin-top:12px}
 
-.note{background:#302543;border-radius:12px;padding:12px;color:#e3d9f6;font-size:13px;line-height:1.5;margin-top:14px}
+.note {
 
-.status{color:var(--green);font-size:13px;margin-top:12px;overflow-wrap:anywhere}
+  background:#302543;border-radius:12px;padding:12px;
+
+  color:#e3d9f6;font-size:13px;line-height:1.5;margin-top:14px
+
+}
+
+.status {
+
+  color:var(--green);font-size:13px;margin-top:12px;
+
+  overflow-wrap:anywhere
+
+}
 
 .steps{display:flex;gap:5px;margin-bottom:16px}
 
@@ -113,21 +140,41 @@ audio{width:100%;margin-top:12px}
 
 .lyrics {
 
-  background:#0b0912;border:1px solid #55416d;border-radius:16px;
+  background:#0b0912;border:1px solid #55416d;
 
-  min-height:240px;padding:18px 12px;display:flex;flex-direction:column;
+  border-radius:16px;min-height:240px;padding:18px 12px;
 
-  justify-content:center;gap:12px;text-align:center;overflow:hidden
+  display:flex;flex-direction:column;justify-content:center;
+
+  gap:12px;text-align:center;overflow:hidden
 
 }
 
-.line{color:#817791;font-size:clamp(19px,5vw,29px);line-height:1.35;font-weight:750}
+.line {
 
-.line.current{background:linear-gradient(90deg,#9333ea,#d946ef);color:white;padding:12px 6px;border-radius:10px}
+  color:#817791;font-size:clamp(19px,5vw,29px);
+
+  line-height:1.35;font-weight:750
+
+}
+
+.line.current {
+
+  background:linear-gradient(90deg,#9333ea,#d946ef);
+
+  color:white;padding:12px 6px;border-radius:10px
+
+}
 
 .line.past{color:#c0b4d4}
 
-.progress{height:6px;background:#443752;border-radius:8px;margin-top:14px;overflow:hidden}
+.progress {
+
+  height:6px;background:#443752;border-radius:8px;
+
+  margin-top:14px;overflow:hidden
+
+}
 
 .progress div{height:100%;width:0;background:var(--pink)}
 
@@ -137,19 +184,71 @@ audio{width:100%;margin-top:12px}
 
 footer{text-align:center;color:#988cae;font-size:12px;padding:20px}
 
-hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+/* Loading screen while checking the saved login */
 
-@media(max-width:400px){.card{padding:15px}.actions{gap:7px}.actions button{padding:12px 8px;font-size:13px}}
+#sessionLoading {
+
+  position:fixed;inset:0;z-index:99999;
+
+  display:flex;flex-direction:column;
+
+  align-items:center;justify-content:center;
+
+  gap:18px;background:linear-gradient(160deg,#30204a,#100d1c 65%);
+
+  color:white;text-align:center;padding:24px
+
+}
+
+#sessionLoading .loadingLogo{font-size:30px;font-weight:900}
+
+#sessionLoading .loadingLogo span{color:var(--pink)}
+
+#sessionLoading .spinner {
+
+  width:38px;height:38px;border:4px solid var(--border);
+
+  border-top-color:var(--pink);border-radius:50%;
+
+  animation:studioSpin .8s linear infinite
+
+}
+
+@keyframes studioSpin{to{transform:rotate(360deg)}}
+
+@media(prefers-reduced-motion:reduce){
+
+  #sessionLoading .spinner{animation:none}
+
+}
+
+@media(max-width:400px){
+
+  .card{padding:15px}
+
+  .actions{gap:7px}
+
+  .actions button{padding:12px 8px;font-size:13px}
+
+}
 
 </style>
-
-<!-- Supabase browser client -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
 
 <body>
+
+<div id="sessionLoading" role="status" aria-live="polite">
+
+  <div class="loadingLogo">MyVoice <span>Studio</span></div>
+
+  <div class="spinner"></div>
+
+  <div>Checking your studio session...</div>
+
+</div>
 
 <header>
 
@@ -217,7 +316,7 @@ hr{border:0;border-top:1px solid var(--border);margin:20px 0}
 
 </section>
 
-<!-- SETUP -->
+<!-- SONG SETUP -->
 
 <section class="screen" id="s1">
 
@@ -313,7 +412,7 @@ hr{border:0;border-top:1px solid var(--border);margin:20px 0}
 
 </section>
 
-<!-- RECORD -->
+<!-- RECORDING -->
 
 <section class="screen" id="s3">
 
@@ -417,8 +516,6 @@ hr{border:0;border-top:1px solid var(--border);margin:20px 0}
 
 'use strict';
 
-/* MyVoice Studio Supabase connection */
-
 const SUPABASE_URL = 'https://fkodgqpftfwwvplleqjm.supabase.co';
 
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_M1YMz2S8d8fNuorJKiWX5A_VsoPGSNN';
@@ -439,11 +536,11 @@ const client = window.supabase.createClient(
 
     auth: {
 
-      persistSession: true,
+      persistSession:true,
 
-      autoRefreshToken: true,
+      autoRefreshToken:true,
 
-      detectSessionInUrl: true
+      detectSessionInUrl:true
 
     }
 
@@ -453,13 +550,13 @@ const client = window.supabase.createClient(
 
 const S = {
 
-  user:null, username:'', title:'', file:null, url:null, duration:0,
+  user:null,username:'',title:'',file:null,url:null,duration:0,
 
-  lines:[], times:[], syncIndex:0, syncing:false,
+  lines:[],times:[],syncIndex:0,syncing:false,
 
-  recorder:null, stream:null, chunks:[], voiceBlob:null, voiceURL:null,
+  recorder:null,stream:null,chunks:[],voiceBlob:null,voiceURL:null,
 
-  clock:null
+  clock:null,recordingStart:0
 
 };
 
@@ -471,7 +568,7 @@ function clock(t){
 
   return String(Math.floor(t/60)).padStart(2,'0')+':'+
 
-         String(Math.floor(t%60)).padStart(2,'0');
+    String(Math.floor(t%60)).padStart(2,'0');
 
 }
 
@@ -551,7 +648,13 @@ $('loginBtn').onclick=async()=>{
 
   const password=$('password').value;
 
-  if(!email||!password){msg('loginStatus','Enter your email and password.');return;}
+  if(!email||!password){
+
+    msg('loginStatus','Enter your email and password.');
+
+    return;
+
+  }
 
   $('loginBtn').disabled=true;
 
@@ -565,9 +668,15 @@ $('loginBtn').onclick=async()=>{
 
     await enterStudio(data.user);
 
-  }catch(e){msg('loginStatus',e.message||'Login failed.');}
+  }catch(e){
 
-  finally{$('loginBtn').disabled=false;}
+    msg('loginStatus',e.message||'Login failed.');
+
+  }finally{
+
+    $('loginBtn').disabled=false;
+
+  }
 
 };
 
@@ -581,13 +690,17 @@ $('registerBtn').onclick=async()=>{
 
   if(!username||!email||!password){
 
-    msg('loginStatus','Enter a username, email, and password.');return;
+    msg('loginStatus','Enter a username, email, and password.');
+
+    return;
 
   }
 
   if(password.length<8){
 
-    msg('loginStatus','Use a password with at least 8 characters.');return;
+    msg('loginStatus','Use a password with at least 8 characters.');
+
+    return;
 
   }
 
@@ -623,9 +736,15 @@ $('registerBtn').onclick=async()=>{
 
     }
 
-  }catch(e){msg('loginStatus',e.message||'Registration failed.');}
+  }catch(e){
 
-  finally{$('registerBtn').disabled=false;}
+    msg('loginStatus',e.message||'Registration failed.');
+
+  }finally{
+
+    $('registerBtn').disabled=false;
+
+  }
 
 };
 
@@ -633,7 +752,13 @@ $('resetBtn').onclick=async()=>{
 
   const email=$('email').value.trim();
 
-  if(!email){msg('loginStatus','Enter your email address first.');return;}
+  if(!email){
+
+    msg('loginStatus','Enter your email address first.');
+
+    return;
+
+  }
 
   try{
 
@@ -647,13 +772,25 @@ $('resetBtn').onclick=async()=>{
 
     msg('loginStatus','If the account exists, a password-reset email will be sent.');
 
-  }catch(e){msg('loginStatus',e.message||'Could not request password reset.');}
+  }catch(e){
+
+    msg('loginStatus',e.message||'Could not request password reset.');
+
+  }
 
 };
 
 async function signOut(){
 
-  await client.auth.signOut();
+  const {error}=await client.auth.signOut();
+
+  if(error){
+
+    msg('loginStatus','Could not sign out: '+error.message);
+
+    return;
+
+  }
 
   S.user=null;
 
@@ -723,7 +860,9 @@ function drawLyrics(id,t){
 
     d.textContent='Your lyrics will appear here.';
 
-    box.append(d);return;
+    box.append(d);
+
+    return;
 
   }
 
@@ -749,7 +888,9 @@ function drawLyrics(id,t){
 
 function updatePlayer(player,id){
 
-  const t=player.currentTime||0,d=player.duration||S.duration||0;
+  const t=player.currentTime||0;
+
+  const d=player.duration||S.duration||0;
 
   if(id==='karaokeLyrics'){
 
@@ -763,19 +904,13 @@ function updatePlayer(player,id){
 
 }
 
-/*
-
- Estimate line starts using detected changes in instrumental energy.
-
- This is a musical estimate, not speech recognition.
-
-*/
-
 async function estimateTiming(){
 
   if(!S.lines.length||!S.file||!S.duration){
 
-    msg('syncStatus','Load music and lyrics first.');return;
+    msg('syncStatus','Load music and lyrics first.');
+
+    return;
 
   }
 
@@ -787,9 +922,11 @@ async function estimateTiming(){
 
     const ctx=new Ctx();
 
-    const audioBuffer=await ctx.decodeAudioData((await S.file.arrayBuffer()).slice(0));
+    const audioBuffer=await ctx.decodeAudioData(
 
-    const channelCount=audioBuffer.numberOfChannels;
+      (await S.file.arrayBuffer()).slice(0)
+
+    );
 
     const sampleRate=audioBuffer.sampleRate;
 
@@ -819,17 +956,29 @@ async function estimateTiming(){
 
     for(let i=2;i<novelty.length-2;i++){
 
-      if(novelty[i]>novelty[i-1]&&novelty[i]>=novelty[i+1]&&
+      if(
 
-         novelty[i]>0.008){
+        novelty[i]>novelty[i-1]&&
 
-        if(!candidates.length||i-candidates[candidates.length-1].frame>=minGap){
+        novelty[i]>=novelty[i+1]&&
+
+        novelty[i]>0.008
+
+      ){
+
+        if(!candidates.length||
+
+          i-candidates[candidates.length-1].frame>=minGap){
 
           candidates.push({frame:i,score:novelty[i],time:i*hop/sampleRate});
 
         }else if(novelty[i]>candidates[candidates.length-1].score){
 
-          candidates[candidates.length-1]={frame:i,score:novelty[i],time:i*hop/sampleRate};
+          candidates[candidates.length-1]={
+
+            frame:i,score:novelty[i],time:i*hop/sampleRate
+
+          };
 
         }
 
@@ -867,7 +1016,13 @@ async function estimateTiming(){
 
         for(const c of candidates){
 
-          if(c.time>=lo&&c.time<=hi&&(!best||Math.abs(c.time-target)<Math.abs(best.time-target)))best=c;
+          if(c.time>=lo&&c.time<=hi&&
+
+            (!best||Math.abs(c.time-target)<Math.abs(best.time-target))){
+
+            best=c;
+
+          }
 
         }
 
@@ -881,7 +1036,11 @@ async function estimateTiming(){
 
     }
 
-    S.times=S.times.map((t,i)=>Math.max(i?S.times[i-1]:0,Math.min(S.duration,t)));
+    S.times=S.times.map((t,i)=>
+
+      Math.max(i?S.times[i-1]:0,Math.min(S.duration,t))
+
+    );
 
     drawLyrics('karaokeLyrics');
 
@@ -913,7 +1072,9 @@ function estimateByWords(){
 
     const t=sum/total*S.duration;
 
-    sum+=w;return t;
+    sum+=w;
+
+    return t;
 
   });
 
@@ -949,7 +1110,9 @@ $('musicFile').onchange=()=>{
 
   if(S.url)URL.revokeObjectURL(S.url);
 
-  S.file=f;S.url=URL.createObjectURL(f);
+  S.file=f;
+
+  S.url=URL.createObjectURL(f);
 
   $('musicInfo').textContent=f.name+' ('+(f.size/1048576).toFixed(2)+' MB)';
 
@@ -977,29 +1140,57 @@ $('lyricsFile').onchange=async()=>{
 
 $('prepare').onclick=async()=>{
 
-  if(!S.file||!S.url){msg('setupStatus','Please select an instrumental audio file.');return;}
+  if(!S.file||!S.url){
+
+    msg('setupStatus','Please select an instrumental audio file.');
+
+    return;
+
+  }
 
   S.title=$('songTitle').value.trim()||'My Song';
 
   S.lines=parseLyrics($('lyricsInput').value);
 
-  if(!S.lines.length){msg('setupStatus','Please add your lyrics.');return;}
+  if(!S.lines.length){
+
+    msg('setupStatus','Please add your lyrics.');
+
+    return;
+
+  }
 
   S.duration=$('musicPreview').duration||S.duration;
 
-  if(!S.duration){msg('setupStatus','Wait for the music to finish loading.');return;}
+  if(!S.duration){
 
-  $('karaokeTitle').textContent=S.title+' — Karaoke';
+    msg('setupStatus','Wait for the music to finish loading.');
 
-  $('karaokeAudio').src=S.url;
+    return;
 
-  $('recordAudio').src=S.url;
+  }
 
-  $('reviewMusic').src=S.url;
+  $('prepare').disabled=true;
 
-  await estimateTiming();
+  try{
 
-  show(2);
+    $('karaokeTitle').textContent=S.title+' — Karaoke';
+
+    $('karaokeAudio').src=S.url;
+
+    $('recordAudio').src=S.url;
+
+    $('reviewMusic').src=S.url;
+
+    await estimateTiming();
+
+    show(2);
+
+  }finally{
+
+    $('prepare').disabled=false;
+
+  }
 
 };
 
@@ -1009,7 +1200,9 @@ $('startSync').onclick=()=>{
 
   if(!S.lines.length)return;
 
-  S.syncIndex=0;S.syncing=true;
+  S.syncIndex=0;
+
+  S.syncing=true;
 
   $('syncNext').disabled=false;
 
@@ -1019,7 +1212,11 @@ $('startSync').onclick=()=>{
 
   $('karaokeAudio').currentTime=0;
 
-  $('karaokeAudio').play().catch(()=>msg('syncStatus','Tap Play on the music player to start.'));
+  $('karaokeAudio').play().catch(()=>
+
+    msg('syncStatus','Tap Play on the music player to start.')
+
+  );
 
   msg('syncStatus','Play the music and tap Sync next line at the beginning of each sung line.');
 
@@ -1073,7 +1270,13 @@ $('back1').onclick=()=>show(1);
 
 $('toRecord').onclick=()=>{
 
-  if(S.syncing){msg('syncStatus','Tap Finish sync before continuing.');return;}
+  if(S.syncing){
+
+    msg('syncStatus','Tap Finish sync before continuing.');
+
+    return;
+
+  }
 
   show(3);
 
@@ -1083,7 +1286,13 @@ $('back2').onclick=()=>show(2);
 
 $('toExport').onclick=()=>{
 
-  if(!S.voiceBlob){msg('recordStatus','Please record your voice first.');return;}
+  if(!S.voiceBlob){
+
+    msg('recordStatus','Please record your voice first.');
+
+    return;
+
+  }
 
   show(4);
 
@@ -1091,9 +1300,11 @@ $('toExport').onclick=()=>{
 
 ['karaokeAudio','recordAudio'].forEach(id=>{
 
-  $(id).addEventListener('timeupdate',()=>updatePlayer($(id),
+  $(id).addEventListener('timeupdate',()=>updatePlayer(
 
-    id==='karaokeAudio'?'karaokeLyrics':'recordLyrics'));
+    $(id),id==='karaokeAudio'?'karaokeLyrics':'recordLyrics'
+
+  ));
 
 });
 
@@ -1113,19 +1324,33 @@ $('startRecord').onclick=async()=>{
 
     let opts={};
 
-    if(MediaRecorder.isTypeSupported('audio/mp4'))opts.mimeType='audio/mp4';
+    if(MediaRecorder.isTypeSupported('audio/mp4')){
 
-    else if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))opts.mimeType='audio/webm;codecs=opus';
+      opts.mimeType='audio/mp4';
+
+    }else if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus')){
+
+      opts.mimeType='audio/webm;codecs=opus';
+
+    }
 
     S.chunks=[];
 
     S.recorder=new MediaRecorder(S.stream,opts);
 
-    S.recorder.ondataavailable=e=>{if(e.data&&e.data.size)S.chunks.push(e.data);};
+    S.recorder.ondataavailable=e=>{
+
+      if(e.data&&e.data.size)S.chunks.push(e.data);
+
+    };
 
     S.recorder.onstop=()=>{
 
-      S.voiceBlob=new Blob(S.chunks,{type:S.recorder.mimeType||'audio/webm'});
+      S.voiceBlob=new Blob(S.chunks,{
+
+        type:S.recorder.mimeType||'audio/webm'
+
+      });
 
       if(S.voiceURL)URL.revokeObjectURL(S.voiceURL);
 
@@ -1163,9 +1388,15 @@ $('startRecord').onclick=async()=>{
 
     $('recordAudio').play().catch(()=>{});
 
-    S.clock=setInterval(()=> $('recordClock').textContent=
+    S.clock=setInterval(()=>
 
-      clock((Date.now()-S.recordingStart)/1000),250);
+      $('recordClock').textContent=clock(
+
+        (Date.now()-S.recordingStart)/1000
+
+      ),250
+
+    );
 
     msg('recordStatus','Recording. Sing along with the instrumental and lyrics.');
 
@@ -1187,33 +1418,67 @@ $('stopRecord').onclick=()=>{
 
 function wavBlob(buffer){
 
-  const channels=buffer.numberOfChannels,rate=buffer.sampleRate;
+  const channels=buffer.numberOfChannels;
 
-  const frames=buffer.length,bytes=2,size=frames*channels*bytes;
+  const rate=buffer.sampleRate;
 
-  const out=new ArrayBuffer(44+size),v=new DataView(out);
+  const frames=buffer.length;
 
-  const str=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  const bytes=2;
 
-  str(0,'RIFF');v.setUint32(4,36+size,true);str(8,'WAVE');str(12,'fmt ');
+  const size=frames*channels*bytes;
 
-  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,channels,true);
+  const out=new ArrayBuffer(44+size);
 
-  v.setUint32(24,rate,true);v.setUint32(28,rate*channels*bytes,true);
+  const v=new DataView(out);
 
-  v.setUint16(32,channels*bytes,true);v.setUint16(34,16,true);
+  const str=(o,s)=>{
 
-  str(36,'data');v.setUint32(40,size,true);
+    for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));
+
+  };
+
+  str(0,'RIFF');
+
+  v.setUint32(4,36+size,true);
+
+  str(8,'WAVE');
+
+  str(12,'fmt ');
+
+  v.setUint32(16,16,true);
+
+  v.setUint16(20,1,true);
+
+  v.setUint16(22,channels,true);
+
+  v.setUint32(24,rate,true);
+
+  v.setUint32(28,rate*channels*bytes,true);
+
+  v.setUint16(32,channels*bytes,true);
+
+  v.setUint16(34,16,true);
+
+  str(36,'data');
+
+  v.setUint32(40,size,true);
 
   let offset=44;
 
   const data=Array.from({length:channels},(_,c)=>buffer.getChannelData(c));
 
-  for(let i=0;i<frames;i++)for(let c=0;c<channels;c++){
+  for(let i=0;i<frames;i++){
 
-    const s=Math.max(-1,Math.min(1,data[c][i]));
+    for(let c=0;c<channels;c++){
 
-    v.setInt16(offset,s<0?s*32768:s*32767,true);offset+=2;
+      const s=Math.max(-1,Math.min(1,data[c][i]));
+
+      v.setInt16(offset,s<0?s*32768:s*32767,true);
+
+      offset+=2;
+
+    }
 
   }
 
@@ -1227,7 +1492,15 @@ function download(blob,name){
 
   const a=document.createElement('a');
 
-  a.href=url;a.download=name;document.body.append(a);a.click();a.remove();
+  a.href=url;
+
+  a.download=name;
+
+  document.body.append(a);
+
+  a.click();
+
+  a.remove();
 
   setTimeout(()=>URL.revokeObjectURL(url),60000);
 
@@ -1235,7 +1508,13 @@ function download(blob,name){
 
 $('makeMix').onclick=async()=>{
 
-  if(!S.voiceBlob||!S.file){msg('exportStatus','A recording and instrumental are required.');return;}
+  if(!S.voiceBlob||!S.file){
+
+    msg('exportStatus','A recording and instrumental are required.');
+
+    return;
+
+  }
 
   $('makeMix').disabled=true;
 
@@ -1249,9 +1528,15 @@ $('makeMix').onclick=async()=>{
 
     ctx=new(window.AudioContext||window.webkitAudioContext)();
 
-    const decode=async blob=>ctx.decodeAudioData((await blob.arrayBuffer()).slice(0));
+    const decode=async blob=>
 
-    const [music,voice]=await Promise.all([decode(S.file),decode(S.voiceBlob)]);
+      ctx.decodeAudioData((await blob.arrayBuffer()).slice(0));
+
+    const [music,voice]=await Promise.all([
+
+      decode(S.file),decode(S.voiceBlob)
+
+    ]);
 
     const rate=44100;
 
@@ -1275,7 +1560,9 @@ $('makeMix').onclick=async()=>{
 
     }
 
-    add(music,.85);add(voice,1);
+    add(music,.85);
+
+    add(voice,1);
 
     const result=await offline.startRendering();
 
@@ -1283,7 +1570,11 @@ $('makeMix').onclick=async()=>{
 
     const audio=document.createElement('audio');
 
-    audio.controls=true;audio.src=URL.createObjectURL(blob);audio.style.width='100%';
+    audio.controls=true;
+
+    audio.src=URL.createObjectURL(blob);
+
+    audio.style.width='100%';
 
     const btn=document.createElement('button');
 
@@ -1311,13 +1602,23 @@ $('makeMix').onclick=async()=>{
 
 };
 
-/* Save title and lyrics to the signed-in user's private database row. */
-
 $('saveProject').onclick=async()=>{
 
-  if(!S.user){msg('exportStatus','Sign in before saving a project.');return;}
+  if(!S.user){
 
-  if(!S.lines.length){msg('exportStatus','Load lyrics before saving.');return;}
+    msg('exportStatus','Sign in before saving a project.');
+
+    return;
+
+  }
+
+  if(!S.lines.length){
+
+    msg('exportStatus','Load lyrics before saving.');
+
+    return;
+
+  }
 
   msg('exportStatus','Saving project to your account…');
 
@@ -1351,9 +1652,17 @@ $('saveProject').onclick=async()=>{
 
 $('loadProjects').onclick=async()=>{
 
-  if(!S.user){msg('exportStatus','Sign in first.');return;}
+  if(!S.user){
 
-  const box=$('projectList');box.replaceChildren();
+    msg('exportStatus','Sign in first.');
+
+    return;
+
+  }
+
+  const box=$('projectList');
+
+  box.replaceChildren();
 
   msg('exportStatus','Loading your saved projects…');
 
@@ -1367,7 +1676,13 @@ $('loadProjects').onclick=async()=>{
 
     if(error)throw error;
 
-    if(!data.length){msg('exportStatus','You have no saved projects yet.');return;}
+    if(!data.length){
+
+      msg('exportStatus','You have no saved projects yet.');
+
+      return;
+
+    }
 
     data.forEach(project=>{
 
@@ -1399,7 +1714,9 @@ $('loadProjects').onclick=async()=>{
 
         S.lines=parseLyrics(project.lyrics||'');
 
-        S.times=Array.isArray(project.lyric_times)?project.lyric_times:S.lines.map(()=>0);
+        S.times=Array.isArray(project.lyric_times)
+
+          ?project.lyric_times:S.lines.map(()=>0);
 
         $('songTitle').value=S.title;
 
@@ -1435,7 +1752,9 @@ $('loadProjects').onclick=async()=>{
 
 $('newSong').onclick=()=>{
 
-  $('karaokeAudio').pause();$('recordAudio').pause();
+  $('karaokeAudio').pause();
+
+  $('recordAudio').pause();
 
   if(S.url)URL.revokeObjectURL(S.url);
 
@@ -1481,9 +1800,11 @@ $('newSong').onclick=()=>{
 
 };
 
-/* Restore the existing Supabase session on this browser. */
+/* Restore the saved Supabase session before displaying the app. */
 
 (async()=>{
+
+  const loading=$('sessionLoading');
 
   try{
 
@@ -1491,25 +1812,37 @@ $('newSong').onclick=()=>{
 
     if(error)throw error;
 
-    if(data.session?.user)await enterStudio(data.session.user);
+    if(data.session?.user){
+
+      await enterStudio(data.session.user);
+
+    }else{
+
+      show(0);
+
+    }
 
   }catch(e){
 
-    console.error(e);
+    console.error('Session restoration:',e);
 
-    msg('loginStatus','Could not restore session. Please log in again.');
+    show(0);
+
+    msg('loginStatus','Could not restore your session. Please sign in again.');
+
+  }finally{
+
+    loading?.remove();
 
   }
 
 })();
 
-/* Optional home-screen installation support */
+/* The studio works without a service worker. */
 
 if('serviceWorker' in navigator && location.protocol==='https:'){
 
-  // GitHub Pages can host a service worker when sw.js is added.
-
-  // Authentication and the studio remain usable without one.
+  // Optional service-worker support can be added separately.
 
 }
 
