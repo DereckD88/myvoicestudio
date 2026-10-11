@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -122,13 +124,11 @@ audio{display:block;width:100%;margin-top:10px}
 
 .stem-name{flex:1;min-width:0;overflow-wrap:anywhere}
 
-.stem-item select{max-width:155px}
-
 footer{text-align:center;padding:20px;color:#77758e;font-size:12px}
 
 hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
-@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:14px}header{align-items:flex-start}.row button{padding:11px 12px}h1{font-size:22px}.stem-item{align-items:flex-start;flex-direction:column}.stem-item select{max-width:none}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:14px}header{align-items:flex-start}.row button{padding:11px 12px}h1{font-size:22px}}
 
 </style>
 
@@ -198,7 +198,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Welcome to your studio</h2>
 
-<p class="muted">Import as many separated audio stems as you need, combine your instrumental tracks, keep vocals separate, record, and export your mix.</p>
+<p class="muted">Upload as many instrumental stems as you need. MyVoice Studio combines them, then lets you record your vocals in the app.</p>
 
 <div id="mainStatus" class="status">Your studio is ready.</div>
 
@@ -206,21 +206,21 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <input id="projectTitle" maxlength="120" placeholder="My new song">
 
-<label for="quickAudioFile" style="margin-top:13px">Select all your audio stems</label>
+<label for="quickAudioFile" style="margin-top:13px">Select your instrumental stems</label>
 
 <input id="quickAudioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm" multiple>
 
-<p class="muted" style="font-size:12px;margin-top:10px">Select all your separated files in one batch. Every imported file starts at the beginning of the song. Choose which file contains vocals below.</p>
+<p class="muted" style="font-size:12px;margin-top:10px">Select multiple instrumental files together. Add more files whenever you need. No vocal files are required.</p>
 
-<div id="multiUploadStatus" class="status">No files imported yet.</div>
+<div id="multiUploadStatus" class="status">No instrumental files imported yet.</div>
 
-<h3>Imported stems</h3>
+<h3>Instrumental stems</h3>
 
-<div id="stemList"><p class="muted">Your imported files will appear here.</p></div>
+<div id="stemList"><p class="muted">Your instrumental files will appear here.</p></div>
 
 <div class="row">
 
-<button id="addMoreBtn" class="secondary">Add more files</button>
+<button id="addMoreBtn" class="secondary">Add more stems</button>
 
 <button id="clearStemsBtn" class="danger">Clear all stems</button>
 
@@ -228,9 +228,9 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <hr>
 
-<h3>Backing mix preview</h3>
+<h3>Complete instrumental preview</h3>
 
-<div id="audioInfo" class="status">No backing tracks loaded.</div>
+<div id="audioInfo" class="status">Import your instrumental files to build the preview.</div>
 
 <audio id="backingAudio" controls preload="metadata"></audio>
 
@@ -250,15 +250,15 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Quick workflow</h2>
 
-<p>1. Select as many stems as you need.</p>
+<p>1. Import all your instrumental stems.</p>
 
-<p>2. Set one stem as vocals; the remaining stems become backing tracks.</p>
+<p>2. Listen to the combined instrumental preview.</p>
 
-<p>3. Add lyrics and synchronize them.</p>
+<p>3. Add lyrics and synchronize their timing.</p>
 
-<p>4. Record more vocals or adjust vocal effects.</p>
+<p>4. Record your vocals inside MyVoice Studio.</p>
 
-<p>5. Export your finished WAV or MP3 mix.</p>
+<p>5. Apply vocal effects and export your finished song.</p>
 
 </div>
 
@@ -270,11 +270,11 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Song & Lyrics</h2>
 
-<label for="songFile">Add more audio stems</label>
+<label for="songFile">Add more instrumental stems</label>
 
 <input id="songFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm" multiple>
 
-<div class="status">Use the Home tab to choose which imported stem contains vocals.</div>
+<div class="status">Every imported file is treated as an instrumental stem.</div>
 
 <div class="row" style="margin-top:10px"><button id="importLyricsBtn" class="secondary">Import lyrics file</button><input id="lyricsFile" type="file" accept=".txt,.lrc,text/plain" hidden></div>
 
@@ -326,7 +326,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 </div>
 
-<button id="playBtn" class="secondary full" style="margin-top:12px">Play song with lyrics</button>
+<button id="playBtn" class="secondary full" style="margin-top:12px">Play instrumental with lyrics</button>
 
 </div>
 
@@ -338,11 +338,11 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Record your voice</h2>
 
-<p class="muted">Use headphones. Recording captures your microphone separately.</p>
+<p class="muted">Record vocals inside the app while listening to the complete instrumental mix. Headphones are recommended.</p>
 
 <div class="row"><button id="recordBtn">Start recording + karaoke</button><button id="stopRecordBtn" class="secondary" disabled>Stop recording</button></div>
 
-<div id="recordStatus" class="status">Import backing stems to record with karaoke.</div>
+<div id="recordStatus" class="status">Import instrumental stems before recording.</div>
 
 <div id="recordLyrics">Your lyrics will appear here.</div>
 
@@ -350,7 +350,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <div class="grid" style="margin-top:14px">
 
-<div><label for="voiceOffset">Place vocal at (seconds)</label><input id="voiceOffset" type="number" min="0" max="7200" step=".05" value="0"></div>
+<div><label for="voiceOffset">Place recorded vocals at (seconds)</label><input id="voiceOffset" type="number" min="0" max="7200" step=".05" value="0"></div>
 
 <div><label for="voiceVolume">Vocal level <span id="voiceVolumeLabel">100%</span></label><input id="voiceVolume" type="range" min="0" max="150" value="100"></div>
 
@@ -370,21 +370,21 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Automatic Voice Fixer</h2>
 
-<span class="badge">VOCAL PROCESSING</span>
+<span class="badge">RECORDED VOCALS ONLY</span>
 
 <div class="status good" style="margin-top:13px">Browser-based vocal cleanup, compression, and ambience.</div>
 
 <div class="grid">
 
-<div><label for="enhancementMode">Enhancement strength</label><select id="enhancementMode"><option value="gentle">Gentle — natural voice</option><option value="standard" selected>Automatic — balanced studio</option><option value="strong">Strong — tighter sound</option></select></div>
+<div><label for="enhancementMode">Enhancement strength</label><select id="enhancementMode"><option value="gentle">Gentle — natural voice</option><option value="standard" selected>Automatic — balanced studio</option><option value="strong">Strong — stronger processing</option></select></div>
 
 <div><label for="reverbAmount">Studio ambience <span id="reverbLabel">8%</span></label><input id="reverbAmount" type="range" min="0" max="25" value="8"></div>
 
 </div>
 
-<div id="fixerStatus" class="status">Import or record a vocal track.</div>
+<div id="fixerStatus" class="status">Record your vocals to enable vocal processing.</div>
 
-<button id="previewVoiceBtn" class="secondary full">Preview processed voice</button>
+<button id="previewVoiceBtn" class="secondary full">Preview processed vocals</button>
 
 </div>
 
@@ -394,7 +394,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <div class="grid">
 
-<div><label for="backingVolume">Backing tracks <span id="backingVolumeLabel">75%</span></label><input id="backingVolume" type="range" min="0" max="150" value="75"></div>
+<div><label for="backingVolume">Instrumental level <span id="backingVolumeLabel">75%</span></label><input id="backingVolume" type="range" min="0" max="150" value="75"></div>
 
 <div><label for="masterVolume">Master output <span id="masterVolumeLabel">90%</span></label><input id="masterVolume" type="range" min="10" max="100" value="90"></div>
 
@@ -418,7 +418,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 </div>
 
-<div id="exportStatus" class="status">Import backing stems and vocals to create a mix.</div>
+<div id="exportStatus" class="status">Import instrumental stems and record your vocals to create a mix.</div>
 
 <button id="exportBtn" class="full">Create and download mix</button>
 
@@ -436,7 +436,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <div id="projectList"><p class="muted">Loading saved projects…</p></div>
 
-<p class="muted" style="font-size:12px;margin-top:12px">Audio files remain on this device and must be imported again after reloading.</p>
+<p class="muted" style="font-size:12px;margin-top:12px">Audio files remain on this device and must be re-imported after reloading.</p>
 
 </div>
 
@@ -462,7 +462,7 @@ const $=id=>document.getElementById(id);
 
 let supabase=null,currentUser=null,authMode="signin",currentProjectId=null;
 
-let stems=[],nextStemId=1,voiceStemId=null;
+let stems=[],nextStemId=1;
 
 let voiceBuffer=null,voiceBlob=null,voiceObjectUrl=null;
 
@@ -472,27 +472,17 @@ let micStream=null,mediaRecorder=null,recordedChunks=[];
 
 let lyricLines=[],lineTimes=[],highlightTimer=null,previewCtx=null;
 
+let previewBuildId=0,recordingStartedAt=0;
+
 const backingAudio=$("backingAudio"),voiceAudio=$("voiceAudio");
 
-function status(el,msg,kind=""){
-
- el.textContent=msg;
-
- el.className="status"+(kind?" "+kind:"");
-
-}
+function status(el,msg,kind=""){el.textContent=msg;el.className="status"+(kind?" "+kind:"")}
 
 function mainStatus(msg,kind=""){status($("mainStatus"),msg,kind)}
 
 function showAuth(msg){
 
- $("loading").style.display="none";
-
- $("authScreen").style.display="block";
-
- $("app").style.display="none";
-
- $("logoutBtn").style.display="none";
+ $("loading").style.display="none";$("authScreen").style.display="block";$("app").style.display="none";$("logoutBtn").style.display="none";
 
  if(msg)status($("authMessage"),msg);
 
@@ -500,13 +490,7 @@ function showAuth(msg){
 
 function showApp(){
 
- $("loading").style.display="none";
-
- $("authScreen").style.display="none";
-
- $("app").style.display="block";
-
- $("logoutBtn").style.display="inline-block";
+ $("loading").style.display="none";$("authScreen").style.display="none";$("app").style.display="block";$("logoutBtn").style.display="inline-block";
 
 }
 
@@ -530,9 +514,7 @@ function parseTimes(v){return Array.isArray(v)?v.map(Number):[]}
 
 function rebuildLines(preserve=true){
 
- const oldL=lyricLines.slice(),oldT=lineTimes.slice();
-
- lyricLines=getLyrics();
+ const oldL=lyricLines.slice(),oldT=lineTimes.slice();lyricLines=getLyrics();
 
  lineTimes=lyricLines.map((line,i)=>{
 
@@ -562,51 +544,25 @@ function activeLineAt(t){
 
 function renderLyrics(active=activeLineAt(backingAudio.currentTime||0)){
 
- const view=$("lyricsView"),sel=$("selectedLine");
-
- view.replaceChildren();sel.replaceChildren();
+ const view=$("lyricsView"),sel=$("selectedLine");view.replaceChildren();sel.replaceChildren();
 
  if(!lyricLines.length){
 
-  view.textContent="Enter your lyrics to see them here.";
-
-  sel.add(new Option("No lyric lines",""));
-
-  $("recordLyrics").textContent="Your lyrics will appear here.";
-
-  return;
+  view.textContent="Enter your lyrics to see them here.";sel.add(new Option("No lyric lines",""));$("recordLyrics").textContent="Your lyrics will appear here.";return;
 
  }
 
  lyricLines.forEach((line,i)=>{
 
-  const d=document.createElement("div");
+  const d=document.createElement("div");d.className="lyric-line"+(i===active?" active":"");d.dataset.index=i;d.textContent=line;
 
-  d.className="lyric-line"+(i===active?" active":"");
+  d.onclick=()=>{sel.value=String(i);$("selectedTime").value=lineTimes[i]??0;if(backingAudio.src)backingAudio.currentTime=lineTimes[i]||0};
 
-  d.dataset.index=i;d.textContent=line;
-
-  d.onclick=()=>{
-
-   sel.value=String(i);$("selectedTime").value=lineTimes[i]??0;
-
-   if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
-
-  };
-
-  view.appendChild(d);
-
-  sel.add(new Option((i+1)+". "+line.slice(0,45)+" — "+(lineTimes[i]||0).toFixed(2)+"s",String(i)));
+  view.appendChild(d);sel.add(new Option((i+1)+". "+line.slice(0,45)+" — "+(lineTimes[i]||0).toFixed(2)+"s",String(i)));
 
  });
 
- if(active>=0){
-
-  const el=view.querySelector('[data-index="'+active+'"]');
-
-  if(el)el.scrollIntoView({block:"nearest"});
-
- }
+ if(active>=0){const el=view.querySelector('[data-index="'+active+'"]');if(el)el.scrollIntoView({block:"nearest"})}
 
  $("recordLyrics").textContent=active>=0?(lyricLines[active]||""):"Get ready…";
 
@@ -632,37 +588,37 @@ async function decodeBlob(blob){
 
 }
 
-function selectedVoiceStem(){return stems.find(s=>s.id===voiceStemId)||null}
+function releaseStem(s){if(s.objectUrl)URL.revokeObjectURL(s.objectUrl)}
 
-function backingStems(){return stems.filter(s=>s.id!==voiceStemId)}
+function clearBackingPreview(){
 
-function releaseStem(s){
+ previewBuildId++;
 
- if(s.objectUrl)URL.revokeObjectURL(s.objectUrl);
+ if(backingObjectUrl){URL.revokeObjectURL(backingObjectUrl);backingObjectUrl=null}
+
+ backingAudio.pause();backingAudio.removeAttribute("src");backingAudio.load();
 
 }
 
+function backingDuration(){return stems.reduce((m,s)=>Math.max(m,s.buffer.duration),0)}
+
 function updateStemUI(){
 
- const list=$("stemList");
-
- list.replaceChildren();
+ const list=$("stemList");list.replaceChildren();
 
  if(!stems.length){
 
-  list.innerHTML='<p class="muted">Your imported files will appear here.</p>';
+  list.innerHTML='<p class="muted">Your instrumental files will appear here.</p>';
 
-  backingBuffer=null;voiceBuffer=null;voiceBlob=null;
+  backingBuffer=null;clearBackingPreview();
 
-  backingAudio.removeAttribute("src");backingAudio.load();
+  status($("audioInfo"),"Import your instrumental files to build the preview.");
 
-  voiceAudio.removeAttribute("src");voiceAudio.load();
+  status($("recordStatus"),"Import instrumental stems before recording.");
 
-  status($("audioInfo"),"No backing tracks loaded.");
+  status($("fixerStatus"),"Record your vocals to enable vocal processing.");
 
-  status($("recordStatus"),"Import backing stems to record with karaoke.");
-
-  status($("fixerStatus"),"Import or record a vocal track.");
+  status($("multiUploadStatus"),"No instrumental files imported yet.");
 
   return;
 
@@ -676,113 +632,61 @@ function updateStemUI(){
 
   name.textContent=s.file.name+" · "+s.buffer.duration.toFixed(1)+" sec";
 
-  const choose=document.createElement("select");
-
-  choose.setAttribute("aria-label","Stem role for "+s.file.name);
-
-  choose.add(new Option("Backing stem","backing"));
-
-  choose.add(new Option("Vocals","vocals"));
-
-  choose.value=s.id===voiceStemId?"vocals":"backing";
-
-  choose.onchange=()=>{
-
-   if(choose.value==="vocals"){
-
-    voiceStemId=s.id;
-
-   }else if(voiceStemId===s.id){
-
-    voiceStemId=null;
-
-   }
-
-   syncTracks();
-
-  };
-
   const remove=document.createElement("button");remove.className="danger";remove.textContent="Remove";
 
   remove.onclick=()=>{
 
-   const removed=stems.find(x=>x.id===s.id);
-
-   if(removed)releaseStem(removed);
-
-   stems=stems.filter(x=>x.id!==s.id);
-
-   if(voiceStemId===s.id)voiceStemId=null;
-
-   syncTracks();
+   releaseStem(s);stems=stems.filter(x=>x.id!==s.id);updateStemUI();buildBackingPreview();
 
   };
 
-  item.append(name,choose,remove);list.appendChild(item);
+  item.append(name,remove);list.append(item);
 
  });
 
- syncTrackBuffers();
+ backingBuffer=stems[0]?.buffer||null;
 
-}
+ status($("audioInfo"),stems.length+" instrumental stem(s) imported. The preview and export combine every stem.","good");
 
-function syncTrackBuffers(){
-
- const backs=backingStems();
-
- backingBuffer=backs[0]?.buffer||null;
-
- const vocal=selectedVoiceStem();
-
- voiceBuffer=vocal?.buffer||null;
-
- voiceBlob=vocal?.file||null;
-
- if(backingObjectUrl){URL.revokeObjectURL(backingObjectUrl);backingObjectUrl=null}
-
- if(backs.length){
-
-  backingObjectUrl=URL.createObjectURL(backs[0].file);
-
-  backingAudio.src=backingObjectUrl;
-
-  status($("audioInfo"),backs.length+" backing stem(s) selected. Preview uses "+backs[0].file.name+". Export mixes all backing stems.","good");
-
- }else{
-
-  backingAudio.removeAttribute("src");backingAudio.load();
-
-  status($("audioInfo"),"No backing stems selected. Set at least one file to Backing.");
-
- }
-
- if(voiceObjectUrl){URL.revokeObjectURL(voiceObjectUrl);voiceObjectUrl=null}
-
- if(vocal){
-
-  voiceObjectUrl=URL.createObjectURL(vocal.file);
-
-  voiceAudio.src=voiceObjectUrl;
-
-  status($("recordStatus"),"Vocal stem: "+vocal.file.name,"good");
-
-  status($("fixerStatus"),"Vocal stem ready for processing.","good");
-
- }else{
-
-  voiceAudio.removeAttribute("src");voiceAudio.load();
-
-  status($("recordStatus"),"No imported vocal stem. You can record vocals or designate a stem as Vocals.");
-
-  status($("fixerStatus"),"Choose one imported stem as Vocals to process it.");
-
- }
+ if(voiceBuffer)status($("recordStatus"),"Recorded vocals ready · "+voiceBuffer.duration.toFixed(1)+" seconds","good");
 
  if(backingBuffer&&lyricLines.length)estimateTiming(false);
 
+ buildBackingPreview();
+
 }
 
-function syncTracks(){updateStemUI()}
+async function buildBackingPreview(){
+
+ const id=++previewBuildId;
+
+ if(!stems.length){clearBackingPreview();return}
+
+ status($("audioInfo"),"Building combined preview from "+stems.length+" instrumental stem(s)…");
+
+ try{
+
+  const mix=await renderBackingOnly(false);
+
+  if(id!==previewBuildId)return;
+
+  const blob=audioBufferToWav(mix);
+
+  if(backingObjectUrl)URL.revokeObjectURL(backingObjectUrl);
+
+  backingObjectUrl=URL.createObjectURL(blob);
+
+  backingAudio.src=backingObjectUrl;backingAudio.load();
+
+  status($("audioInfo"),"Combined instrumental preview ready · "+stems.length+" stems · "+mix.duration.toFixed(1)+" seconds","good");
+
+ }catch(e){
+
+  if(id===previewBuildId)status($("audioInfo"),"Preview could not be built: "+e.message,"bad");
+
+ }
+
+}
 
 async function importAudioFiles(fileList){
 
@@ -792,19 +696,13 @@ async function importAudioFiles(fileList){
 
  const valid=files.filter(f=>f.type.startsWith("audio/")||/\.(mp3|wav|m4a|aac|ogg|flac|webm|mp4)$/i.test(f.name));
 
- if(!valid.length){
-
-  status($("multiUploadStatus"),"No supported audio files selected.","bad");
-
-  return;
-
- }
+ if(!valid.length){status($("multiUploadStatus"),"No supported audio files selected.","bad");return}
 
  $("quickAudioFile").disabled=true;$("songFile").disabled=true;
 
  let loaded=0,failed=[];
 
- status($("multiUploadStatus"),"Importing "+valid.length+" file(s)…");
+ status($("multiUploadStatus"),"Importing "+valid.length+" instrumental file(s)…");
 
  for(const file of valid){
 
@@ -812,9 +710,7 @@ async function importAudioFiles(fileList){
 
    const buffer=await decodeBlob(file);
 
-   const objectUrl=URL.createObjectURL(file);
-
-   stems.push({id:nextStemId++,file,buffer,objectUrl});
+   stems.push({id:nextStemId++,file,buffer,objectUrl:URL.createObjectURL(file)});
 
    loaded++;
 
@@ -822,15 +718,13 @@ async function importAudioFiles(fileList){
 
  }
 
- if(!voiceStemId&&stems.length===1)voiceStemId=null;
+ if(!$("projectTitle").value.trim()&&stems.length)$("projectTitle").value=stems[0].file.name.replace(/\.[^.]+$/,"").slice(0,120);
 
  updateStemUI();
 
- const msg="Imported "+loaded+" file(s). Total stems: "+stems.length+". Choose Vocals beside one file; the rest will be mixed as backing.";
+ status($("multiUploadStatus"),"Imported "+loaded+" file(s). Total instrumental stems: "+stems.length+(failed.length?". Failed: "+failed.join("; "):""),failed.length?"bad":"good");
 
- status($("multiUploadStatus"),failed.length?msg+" Failed: "+failed.join("; "):msg,failed.length?"bad":"good");
-
- mainStatus(failed.length?"Some files could not be imported. Try WAV or MP3 versions.":"Audio stems imported successfully.","good");
+ mainStatus(failed.length?"Some files could not be imported. Try WAV or MP3 versions.":"Instrumental stems imported successfully.","good");
 
  $("quickAudioFile").value="";$("songFile").value="";
 
@@ -846,11 +740,9 @@ $("addMoreBtn").onclick=()=>$("quickAudioFile").click();
 
 $("clearStemsBtn").onclick=()=>{
 
- if(!confirm("Remove all imported audio stems?"))return;
+ if(!confirm("Remove all imported instrumental stems? Your recorded vocals will be kept."))return;
 
- stems.forEach(releaseStem);stems=[];voiceStemId=null;
-
- syncTracks();status($("multiUploadStatus"),"All stems cleared.");
+ stems.forEach(releaseStem);stems=[];updateStemUI();mainStatus("Instrumental stems cleared.");
 
 };
 
@@ -878,9 +770,7 @@ function estimateTiming(show=true){
 
  const start=Math.max(0,Number($("startOffset").value)||0);
 
- const duration=backingStems().reduce((m,s)=>Math.max(m,s.buffer.duration),0);
-
- const requested=Math.max(.5,Number($("lineDuration").value)||4);
+ const duration=backingDuration(),requested=Math.max(.5,Number($("lineDuration").value)||4);
 
  const per=duration>start?Math.max(.5,(duration-start)/lyricLines.length):requested;
 
@@ -888,31 +778,21 @@ function estimateTiming(show=true){
 
  renderLyrics();
 
- if(show)status($("lyricsStatus"),"Estimated timing created. Fine-tune each line to match the song.");
+ if(show)status($("lyricsStatus"),"Estimated timing created. Fine-tune line starts to match the song.");
 
 }
 
 $("estimateBtn").onclick=()=>estimateTiming();
 
-$("selectedLine").onchange=()=>{
-
- const i=Number($("selectedLine").value);$("selectedTime").value=lineTimes[i]??0;
-
-};
+$("selectedLine").onchange=()=>{const i=Number($("selectedLine").value);$("selectedTime").value=lineTimes[i]??0};
 
 $("setLineTimeBtn").onclick=()=>{
 
  const i=Number($("selectedLine").value),t=Number($("selectedTime").value);
 
- if(!Number.isInteger(i)||i<0||i>=lyricLines.length||!Number.isFinite(t)||t<0){
+ if(!Number.isInteger(i)||i<0||i>=lyricLines.length||!Number.isFinite(t)||t<0){status($("lyricsStatus"),"Choose a lyric line and valid start time.","bad");return}
 
-  status($("lyricsStatus"),"Choose a lyric line and valid start time.","bad");return;
-
- }
-
- lineTimes[i]=t;renderLyrics(activeLineAt(backingAudio.currentTime||0));
-
- $("selectedLine").value=String(i);$("selectedTime").value=t;
+ lineTimes[i]=t;renderLyrics(activeLineAt(backingAudio.currentTime||0));$("selectedLine").value=String(i);$("selectedTime").value=t;
 
  status($("lyricsStatus"),"Line timing updated. Save to keep it.");
 
@@ -926,7 +806,7 @@ function moveLine(d){
 
  $("selectedLine").value=String(i);$("selectedTime").value=lineTimes[i]??0;
 
- if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
+ if(backingAudio.src)backingAudio.currentTime=lineTimes[i]||0;
 
  renderLyrics(i);
 
@@ -938,15 +818,13 @@ $("nextLineBtn").onclick=()=>moveLine(1);
 
 $("playBtn").onclick=async()=>{
 
- if(!backingBuffer){status($("lyricsStatus"),"Load a backing stem first.","bad");return}
+ if(!backingBuffer){status($("lyricsStatus"),"Import instrumental stems first.","bad");return}
 
  try{
 
-  if(backingAudio.paused){
+  if(backingAudio.paused){await backingAudio.play();$("playBtn").textContent="Pause playback";startHighlight()}
 
-   await backingAudio.play();$("playBtn").textContent="Pause playback";startHighlight();
-
-  }else{backingAudio.pause();$("playBtn").textContent="Play song with lyrics";stopHighlight()}
+  else{backingAudio.pause();$("playBtn").textContent="Play instrumental with lyrics";stopHighlight()}
 
  }catch(e){status($("lyricsStatus"),"Playback could not start: "+e.message,"bad")}
 
@@ -954,13 +832,13 @@ $("playBtn").onclick=async()=>{
 
 backingAudio.onplay=startHighlight;
 
-backingAudio.onpause=()=>{stopHighlight();$("playBtn").textContent="Play song with lyrics";refreshHighlight()};
+backingAudio.onpause=()=>{stopHighlight();$("playBtn").textContent="Play instrumental with lyrics";refreshHighlight()};
 
-backingAudio.onended=()=>{stopHighlight();$("playBtn").textContent="Play song with lyrics";$("recordLyrics").textContent="Song finished."};
+backingAudio.onended=()=>{stopHighlight();$("playBtn").textContent="Play instrumental with lyrics";$("recordLyrics").textContent="Song finished."};
 
 backingAudio.onseeked=refreshHighlight;
 
-/* Authentication */
+/* Supabase authentication */
 
 $("toggleAuth").onclick=()=>{
 
@@ -1020,9 +898,7 @@ $("forgotPassword").onclick=async()=>{
 
  try{
 
-  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
-
-  if(error)throw error;
+  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)throw error;
 
   status($("authMessage"),"If the account exists, a password reset email has been requested.","good");
 
@@ -1040,13 +916,13 @@ $("logoutBtn").onclick=async()=>{
 
 };
 
-/* Recording */
+/* Record vocals separately. Imported files are never treated as vocals. */
 
 $("recordBtn").onclick=async()=>{
 
  try{
 
-  if(!backingStems().length)throw Error("Import at least one backing stem first.");
+  if(!stems.length)throw Error("Import instrumental stems first.");
 
   if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw Error("Recording requires Safari on HTTPS.");
 
@@ -1064,31 +940,39 @@ $("recordBtn").onclick=async()=>{
 
   mediaRecorder.ondataavailable=e=>{if(e.data?.size)recordedChunks.push(e.data)};
 
+  mediaRecorder.onerror=e=>status($("recordStatus"),"Recording error: "+(e.error?.message||"unknown error"),"bad");
+
   mediaRecorder.onstop=async()=>{
 
    try{
 
-    const blob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||"audio/mp4"});
+    voiceBlob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||"audio/mp4"});
 
-    const buffer=await decodeBlob(blob);
+    const buffer=await decodeBlob(voiceBlob);
 
-    const file=new File([blob],"Recorded vocals."+((blob.type||"").includes("mp4")?"m4a":"webm"),{type:blob.type});
+    voiceBuffer=buffer;
 
-    const s={id:nextStemId++,file,buffer,objectUrl:URL.createObjectURL(file)};
+    if(voiceObjectUrl)URL.revokeObjectURL(voiceObjectUrl);
 
-    stems.push(s);voiceStemId=s.id;syncTracks();
+    voiceObjectUrl=URL.createObjectURL(voiceBlob);
 
-    status($("recordStatus"),"Recording saved as a vocal stem · "+buffer.duration.toFixed(1)+" seconds","good");
+    voiceAudio.src=voiceObjectUrl;voiceAudio.load();
 
-    status($("fixerStatus"),"Recording ready for vocal processing.","good");
+    $("voiceOffset").value="0";
 
-   }catch(e){status($("recordStatus"),"Recording could not be decoded: "+e.message,"bad")}
+    status($("recordStatus"),"Your recorded vocals are ready · "+buffer.duration.toFixed(1)+" seconds","good");
+
+    status($("fixerStatus"),"Recorded vocals ready for processing.","good");
+
+    mainStatus("Vocals recorded successfully.","good");
+
+   }catch(e){voiceBuffer=null;status($("recordStatus"),"Recording could not be decoded: "+e.message,"bad")}
 
    finally{if(micStream)micStream.getTracks().forEach(t=>t.stop());micStream=null}
 
   };
 
-  mediaRecorder.start();
+  mediaRecorder.start();recordingStartedAt=Date.now();
 
   backingAudio.currentTime=0;renderLyrics(-1);
 
@@ -1096,9 +980,11 @@ $("recordBtn").onclick=async()=>{
 
   $("stopRecordBtn").disabled=false;
 
-  status($("recordStatus"),"Recording… sing along with the highlighted lyrics.","good");
+  status($("recordStatus"),"Recording… sing along with the complete instrumental mix.","good");
 
  }catch(e){
+
+  if(mediaRecorder&&mediaRecorder.state!=="inactive")try{mediaRecorder.stop()}catch(_){}
 
   if(micStream)micStream.getTracks().forEach(t=>t.stop());
 
@@ -1116,7 +1002,7 @@ $("stopRecordBtn").onclick=()=>{
 
  backingAudio.pause();$("recordBtn").disabled=false;$("stopRecordBtn").disabled=true;
 
- status($("recordStatus"),"Finishing recording…");
+ status($("recordStatus"),"Finishing recording… "+((Date.now()-recordingStartedAt)/1000).toFixed(1)+" seconds captured.");
 
 };
 
@@ -1160,7 +1046,7 @@ $("masterVolume").oninput=()=>$("masterVolumeLabel").textContent=$("masterVolume
 
 $("previewVoiceBtn").onclick=async()=>{
 
- if(!voiceBuffer){status($("fixerStatus"),"Choose one stem as Vocals or record your voice first.","bad");return}
+ if(!voiceBuffer){status($("fixerStatus"),"Record your vocals first.","bad");return}
 
  $("previewVoiceBtn").disabled=true;
 
@@ -1182,23 +1068,47 @@ $("previewVoiceBtn").onclick=async()=>{
 
 };
 
-/* Mix all backing stems together and add the separate vocal stem. */
+/* Mix all imported instrumental stems with vocals recorded in the app. */
+
+async function renderBackingOnly(showStatus=true){
+
+ if(!stems.length)throw Error("Import instrumental stems first.");
+
+ const duration=backingDuration();
+
+ if(duration<=0||duration>900)throw Error("Instrumental duration must be under 15 minutes.");
+
+ const Offline=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+
+ if(!Offline)throw Error("Offline audio mixing is not supported.");
+
+ const sr=44100,ctx=new Offline(2,Math.ceil(duration*sr),sr);
+
+ const master=ctx.createGain();master.gain.value=Number($("backingVolume").value)/100;master.connect(ctx.destination);
+
+ for(const stem of stems){
+
+  const src=ctx.createBufferSource();src.buffer=stem.buffer;src.connect(master);src.start(0);
+
+ }
+
+ if(showStatus)status($("exportStatus"),"Combining "+stems.length+" instrumental stems…");
+
+ return await ctx.startRendering();
+
+}
 
 async function renderMix(){
 
- const backs=backingStems();
+ if(!stems.length)throw Error("Import instrumental stems first.");
 
- const vocal=selectedVoiceStem();
+ if(!voiceBuffer)throw Error("Record your vocals in the Recording tab before exporting.");
 
- if(!backs.length)throw Error("Import and select at least one backing stem.");
+ status($("exportStatus"),"Combining instrumental stems and processing recorded vocals…");
 
- if(!vocal||!voiceBuffer)throw Error("Choose one imported file as Vocals, or record your voice.");
+ const sr=44100,offset=Math.max(0,Number($("voiceOffset").value)||0);
 
- status($("exportStatus"),"Mixing "+backs.length+" backing stem(s) and the vocal track…");
-
- const sr=44100;
-
- const duration=Math.max(...backs.map(s=>s.buffer.duration),voiceBuffer.duration+Math.max(0,Number($("voiceOffset").value)||0));
+ const duration=Math.max(backingDuration(),voiceBuffer.duration+offset);
 
  if(duration>900)throw Error("Exports are limited to 15 minutes on this version.");
 
@@ -1210,21 +1120,17 @@ async function renderMix(){
 
  const musicGain=ctx.createGain();musicGain.gain.value=Number($("backingVolume").value)/100;musicGain.connect(ctx.destination);
 
- for(const stem of backs){
+ for(const stem of stems){
 
-  const src=ctx.createBufferSource();src.buffer=stem.buffer;
-
-  src.connect(musicGain);src.start(0);
+  const src=ctx.createBufferSource();src.buffer=stem.buffer;src.connect(musicGain);src.start(0);
 
  }
 
- const src=ctx.createBufferSource();src.buffer=voiceBuffer;
+ const vocal=ctx.createBufferSource();vocal.buffer=voiceBuffer;
 
  const vg=ctx.createGain();vg.gain.value=Number($("voiceVolume").value)/100;
 
- src.connect(vg);connectVocalChain(ctx,vg,ctx.destination);
-
- src.start(Math.max(0,Number($("voiceOffset").value)||0));
+ vocal.connect(vg);connectVocalChain(ctx,vg,ctx.destination);vocal.start(offset);
 
  const rendered=await ctx.startRendering();
 
@@ -1242,9 +1148,7 @@ async function renderMix(){
 
 function audioBufferToWav(b){
 
- const ch=2,frames=b.length,align=ch*2,size=frames*align;
-
- const arr=new ArrayBuffer(44+size),v=new DataView(arr);
+ const ch=2,frames=b.length,align=ch*2,size=frames*align,arr=new ArrayBuffer(44+size),v=new DataView(arr);
 
  const write=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
 
@@ -1290,11 +1194,9 @@ function downloadBlob(blob,ext){
 
  const name=($("projectTitle").value.trim()||"myvoice-song").replace(/[^\w-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80)||"myvoice-song";
 
- const url=URL.createObjectURL(blob),a=document.createElement("a");
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name+"."+ext;
 
- a.href=url;a.download=name+"."+ext;document.body.appendChild(a);a.click();a.remove();
-
- setTimeout(()=>URL.revokeObjectURL(url),60000);
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 
 }
 
@@ -1312,15 +1214,11 @@ $("exportBtn").onclick=async()=>{
 
   if($("exportFormat").value==="mp3"){
 
-   const q=Number($("mp3Quality").value)||192;status($("exportStatus"),"Encoding MP3 at "+q+" kbps…");
-
-   blob=audioBufferToMp3(mix,q);ext="mp3";
+   const q=Number($("mp3Quality").value)||192;status($("exportStatus"),"Encoding MP3 at "+q+" kbps…");blob=audioBufferToMp3(mix,q);ext="mp3";
 
   }else{blob=audioBufferToWav(mix);ext="wav"}
 
-  downloadBlob(blob,ext);
-
-  status($("exportStatus"),ext.toUpperCase()+" export created. On iPhone, check Downloads or use Share → Save to Files.","good");
+  downloadBlob(blob,ext);status($("exportStatus"),ext.toUpperCase()+" export created. On iPhone, check Downloads or use Share → Save to Files.","good");
 
  }catch(e){status($("exportStatus"),e.message||"Export failed.","bad")}
 
@@ -1328,7 +1226,7 @@ $("exportBtn").onclick=async()=>{
 
 };
 
-/* Supabase projects */
+/* Supabase saved projects */
 
 async function saveProject(){
 
@@ -1346,7 +1244,7 @@ async function saveProject(){
 
  if(data)currentProjectId=data.id;
 
- await loadProjects();mainStatus("Project saved. Audio files remain on this device.","good");
+ await loadProjects();mainStatus("Project saved. Audio files and recorded vocals remain on this device.","good");
 
 }
 
@@ -1402,7 +1300,7 @@ function loadProject(p){
 
  if(lineTimes.length!==lyricLines.length)lineTimes=lyricLines.map((_,i)=>lineTimes[i]??i*4);
 
- renderLyrics();status($("lyricsStatus"),"Project loaded. Re-import its audio stems to play or export.");
+ renderLyrics();status($("lyricsStatus"),"Project loaded. Re-import instrumental stems and record or re-import your vocals.");
 
  switchTab("song");
 
