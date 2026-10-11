@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -22,9 +20,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 
-:root{color-scheme:dark;--bg:#10101b;--panel:#1b1b2b;--panel2:#26263d;--text:#f5f4ff;--muted:#aaa9c3;--purple:#a18aff;--pink:#fa72b5;--green:#6de2b2}
+:root{color-scheme:dark;--bg:#10101b;--panel:#1b1b2b;--panel2:#26263d;--text:#f5f4ff;--muted:#aaa9c3;--purple:#a18aff;--pink:#fa72b5}
 
 *{box-sizing:border-box}
 
@@ -34,7 +34,7 @@ button,input,textarea,select{font:inherit}
 
 button{border:0;border-radius:12px;padding:12px 15px;font-weight:750;background:var(--purple);color:#171326;cursor:pointer}
 
-button:disabled{opacity:.45;cursor:not-allowed}
+button:disabled{opacity:.45}
 
 button.secondary{background:var(--panel2);color:var(--text);border:1px solid #45435f}
 
@@ -42,7 +42,7 @@ button.danger{background:#522834;color:#ffe4e7}
 
 input,textarea,select{width:100%;padding:12px;border:1px solid #45435f;border-radius:10px;background:#121220;color:var(--text);min-width:0}
 
-textarea{min-height:140px;line-height:1.5;resize:vertical}
+textarea{min-height:140px;line-height:1.5}
 
 input[type=range]{padding:0;accent-color:var(--pink)}
 
@@ -110,31 +110,25 @@ main{max-width:1000px;margin:auto;padding:0 13px 40px}
 
 audio{display:block;width:100%;margin-top:10px}
 
-#lyricsView{height:46vh;min-height:300px;max-height:620px;overflow:auto;background:#090d18;border:1px solid #343e58;border-radius:18px;padding:18px 12px;text-align:center;scroll-behavior:smooth}
+#lyricsView{height:42vh;min-height:250px;max-height:620px;overflow:auto;background:#090d18;border:1px solid #343e58;border-radius:18px;padding:18px 12px;text-align:center}
 
 .lyric-line{padding:13px 8px;color:#a6abc0;border-radius:10px;line-height:1.45;font-size:clamp(18px,4.8vw,27px);font-weight:650}
 
 .lyric-line.active{color:#fff;background:#164eab;box-shadow:0 0 0 2px #60a5fa inset;font-weight:900}
 
-.lyric-line.active[data-color="green"]{background:#126b47;box-shadow:0 0 0 2px #4ade80 inset}
+#recordLyrics{min-height:180px;display:flex;align-items:center;justify-content:center;padding:25px 15px;border:3px solid #60a5fa;border-radius:20px;background:#10264b;color:#fff;font-size:clamp(28px,8vw,46px);line-height:1.25;font-weight:900;text-align:center;margin:16px 0}
 
-.lyric-line.active[data-color="yellow"]{background:#725a05;box-shadow:0 0 0 2px #fde047 inset;color:#fff9c2}
+.project-item,.stem-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:#121220;border-radius:10px;margin-bottom:9px}
 
-#recordLyrics{min-height:230px;display:flex;align-items:center;justify-content:center;padding:30px 18px;border:3px solid #60a5fa;border-radius:20px;background:#10264b;color:#fff;font-size:clamp(32px,8vw,48px)!important;line-height:1.25;font-weight:900;text-align:center;margin:16px 0 22px}
+.stem-name{flex:1;min-width:0;overflow-wrap:anywhere}
 
-#recordLyrics[data-color="green"]{background:#10472f;border-color:#4ade80}
-
-#recordLyrics[data-color="yellow"]{background:#554400;border-color:#fde047;color:#fff6b2}
-
-.project-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:#121220;border-radius:10px;margin-bottom:9px}
-
-.project-title{overflow-wrap:anywhere;flex:1}
+.stem-item select{max-width:155px}
 
 footer{text-align:center;padding:20px;color:#77758e;font-size:12px}
 
 hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
-@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:14px}header{align-items:flex-start}.row button{padding:11px 12px}h1{font-size:22px}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:14px}header{align-items:flex-start}.row button{padding:11px 12px}h1{font-size:22px}.stem-item{align-items:flex-start;flex-direction:column}.stem-item select{max-width:none}}
 
 </style>
 
@@ -204,23 +198,39 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Welcome to your studio</h2>
 
-<p class="muted">Import your backing track and separated vocals together, record your voice, apply vocal effects, and export your finished mix.</p>
+<p class="muted">Import as many separated audio stems as you need, combine your instrumental tracks, keep vocals separate, record, and export your mix.</p>
 
 <div id="mainStatus" class="status">Your studio is ready.</div>
 
-<div class="grid">
+<label for="projectTitle">Project name</label>
 
-<div><label for="projectTitle">Project name</label><input id="projectTitle" maxlength="120" placeholder="My new song"></div>
+<input id="projectTitle" maxlength="120" placeholder="My new song">
 
-<div><label for="quickAudioFile">Select multiple audio files</label><input id="quickAudioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm" multiple></div>
+<label for="quickAudioFile" style="margin-top:13px">Select all your audio stems</label>
 
-</div>
+<input id="quickAudioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm" multiple>
 
-<p class="muted" style="font-size:12px;margin-top:10px">Select your backing track first and your separated vocal track second. Both can be selected together in Files.</p>
+<p class="muted" style="font-size:12px;margin-top:10px">Select all your separated files in one batch. Every imported file starts at the beginning of the song. Choose which file contains vocals below.</p>
 
 <div id="multiUploadStatus" class="status">No files imported yet.</div>
 
-<div id="audioInfo" class="status">No backing track loaded.</div>
+<h3>Imported stems</h3>
+
+<div id="stemList"><p class="muted">Your imported files will appear here.</p></div>
+
+<div class="row">
+
+<button id="addMoreBtn" class="secondary">Add more files</button>
+
+<button id="clearStemsBtn" class="danger">Clear all stems</button>
+
+</div>
+
+<hr>
+
+<h3>Backing mix preview</h3>
+
+<div id="audioInfo" class="status">No backing tracks loaded.</div>
 
 <audio id="backingAudio" controls preload="metadata"></audio>
 
@@ -240,13 +250,13 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Quick workflow</h2>
 
-<p>1. Select your instrumental and vocal files together.</p>
+<p>1. Select as many stems as you need.</p>
 
-<p>2. Add lyrics and synchronize their start times.</p>
+<p>2. Set one stem as vocals; the remaining stems become backing tracks.</p>
 
-<p>3. Record additional vocals if needed.</p>
+<p>3. Add lyrics and synchronize them.</p>
 
-<p>4. Preview vocal processing.</p>
+<p>4. Record more vocals or adjust vocal effects.</p>
 
 <p>5. Export your finished WAV or MP3 mix.</p>
 
@@ -260,19 +270,15 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Song & Lyrics</h2>
 
-<label for="songFile">Choose multiple audio files</label>
+<label for="songFile">Add more audio stems</label>
 
 <input id="songFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.webm" multiple>
 
-<div id="songUploadStatus" class="status">Select one or two audio files.</div>
+<div class="status">Use the Home tab to choose which imported stem contains vocals.</div>
 
 <div class="row" style="margin-top:10px"><button id="importLyricsBtn" class="secondary">Import lyrics file</button><input id="lyricsFile" type="file" accept=".txt,.lrc,text/plain" hidden></div>
 
-<p class="muted" style="font-size:12px">First file = backing track. Second file = isolated vocals. This feature imports separated stems; it does not remove vocals from a mixed song.</p>
-
-<hr>
-
-<label for="lyricsInput">Lyrics — one line per lyric line</label>
+<label for="lyricsInput" style="margin-top:14px">Lyrics — one line per lyric line</label>
 
 <textarea id="lyricsInput" placeholder="Paste or type your lyrics here…"></textarea>
 
@@ -288,8 +294,6 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <button id="estimateBtn">Estimate timing</button>
 
-<button id="applyTimingBtn" class="secondary">Apply timing</button>
-
 <button id="saveBtn" class="secondary">Save project</button>
 
 </div>
@@ -301,8 +305,6 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 <div class="card">
 
 <h2>Lyric synchronization</h2>
-
-<p class="muted">Estimated timing is a starting point. Fine-tune individual line starts to match the song.</p>
 
 <div id="lyricsView"><p class="muted">Your lyrics will appear here.</p></div>
 
@@ -336,13 +338,13 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Record your voice</h2>
 
-<p class="muted">Use headphones. Recording captures your microphone separately so it can be mixed with the backing track.</p>
+<p class="muted">Use headphones. Recording captures your microphone separately.</p>
 
 <div class="row"><button id="recordBtn">Start recording + karaoke</button><button id="stopRecordBtn" class="secondary" disabled>Stop recording</button></div>
 
-<div id="recordStatus" class="status">Import a backing track to record with karaoke.</div>
+<div id="recordStatus" class="status">Import backing stems to record with karaoke.</div>
 
-<div id="recordLyrics" class="status" data-color="blue" aria-live="polite">Your lyrics will appear here.</div>
+<div id="recordLyrics">Your lyrics will appear here.</div>
 
 <audio id="voiceAudio" controls preload="metadata"></audio>
 
@@ -368,25 +370,19 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <h2>Automatic Voice Fixer</h2>
 
-<span class="badge">AUTOMATIC MODE</span>
+<span class="badge">VOCAL PROCESSING</span>
 
-<div class="status good" style="margin-top:13px">Browser-based vocal cleanup, compression, ambience, and pitch correction.</div>
-
-<p>Pitch correction estimates sung pitch and moves notes toward the selected key. This is a basic browser effect, not a full AI studio model.</p>
+<div class="status good" style="margin-top:13px">Browser-based vocal cleanup, compression, and ambience.</div>
 
 <div class="grid">
 
-<div><label for="enhancementMode">Enhancement strength</label><select id="enhancementMode"><option value="gentle">Gentle — natural voice</option><option value="standard" selected>Automatic — balanced studio</option><option value="strong">Strong — tighter tuning</option></select></div>
-
-<div><label for="musicalKey">Song key for pitch correction</label><select id="musicalKey"><option value="chromatic">Chromatic (any note)</option><option value="C">C major / A minor</option><option value="Db">Db major / Bb minor</option><option value="D">D major / B minor</option><option value="Eb">Eb major / C minor</option><option value="E">E major / C# minor</option><option value="F">F major / D minor</option><option value="Gb">Gb major / Eb minor</option><option value="G">G major / E minor</option><option value="Ab">Ab major / F minor</option><option value="A">A major / F# minor</option><option value="Bb">Bb major / G minor</option><option value="B">B major / G# minor</option></select></div>
-
-<div><label for="tuneAmount">Pitch correction strength <span id="tuneLabel">70%</span></label><input id="tuneAmount" type="range" min="0" max="100" value="70"></div>
+<div><label for="enhancementMode">Enhancement strength</label><select id="enhancementMode"><option value="gentle">Gentle — natural voice</option><option value="standard" selected>Automatic — balanced studio</option><option value="strong">Strong — tighter sound</option></select></div>
 
 <div><label for="reverbAmount">Studio ambience <span id="reverbLabel">8%</span></label><input id="reverbAmount" type="range" min="0" max="25" value="8"></div>
 
 </div>
 
-<div id="fixerStatus" class="status">Load vocals or record your voice to preview processing.</div>
+<div id="fixerStatus" class="status">Import or record a vocal track.</div>
 
 <button id="previewVoiceBtn" class="secondary full">Preview processed voice</button>
 
@@ -398,7 +394,7 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <div class="grid">
 
-<div><label for="backingVolume">Backing track <span id="backingVolumeLabel">75%</span></label><input id="backingVolume" type="range" min="0" max="150" value="75"></div>
+<div><label for="backingVolume">Backing tracks <span id="backingVolumeLabel">75%</span></label><input id="backingVolume" type="range" min="0" max="150" value="75"></div>
 
 <div><label for="masterVolume">Master output <span id="masterVolumeLabel">90%</span></label><input id="masterVolume" type="range" min="10" max="100" value="90"></div>
 
@@ -422,11 +418,11 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 </div>
 
-<div id="exportStatus" class="status">Load a backing track and vocal track to create your mix.</div>
+<div id="exportStatus" class="status">Import backing stems and vocals to create a mix.</div>
 
 <button id="exportBtn" class="full">Create and download mix</button>
 
-<p class="muted" style="font-size:12px;margin-top:12px">Keep this page open while processing. If a download opens in a preview, use Share and choose Save to Files.</p>
+<p class="muted" style="font-size:12px;margin-top:12px">Keep this page open while processing. On iPhone, use Share → Save to Files if needed.</p>
 
 </div>
 
@@ -436,11 +432,11 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 <div class="card">
 
-<div class="row"><div style="flex:1"><h2>My Saved Projects</h2><p class="muted">Your projects saved to Supabase.</p></div><button id="refreshProjectsBtn" class="secondary">Refresh</button></div>
+<div class="row"><div style="flex:1"><h2>My Saved Projects</h2><p class="muted">Lyrics and timing saved to Supabase.</p></div><button id="refreshProjectsBtn" class="secondary">Refresh</button></div>
 
 <div id="projectList"><p class="muted">Loading saved projects…</p></div>
 
-<p class="muted" style="font-size:12px;margin-top:12px">Project names, lyrics and timing are saved to your account. Audio files remain on this device.</p>
+<p class="muted" style="font-size:12px;margin-top:12px">Audio files remain on this device and must be imported again after reloading.</p>
 
 </div>
 
@@ -450,11 +446,9 @@ hr{border:0;border-top:1px solid #34334d;margin:17px 0}
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 
-(() => {
+(()=>{
 
 "use strict";
 
@@ -468,507 +462,473 @@ const $=id=>document.getElementById(id);
 
 let supabase=null,currentUser=null,authMode="signin",currentProjectId=null;
 
-let backingBuffer=null,voiceBuffer=null,voiceBlob=null;
+let stems=[],nextStemId=1,voiceStemId=null;
 
-let backingObjectUrl=null,voiceObjectUrl=null;
+let voiceBuffer=null,voiceBlob=null,voiceObjectUrl=null;
 
-let mediaRecorder=null,micStream=null,recordedChunks=[];
+let backingObjectUrl=null,backingBuffer=null;
 
-let lyricLines=[],lineTimes=[],highlightTimer=null,recordingStartedAt=0;
+let micStream=null,mediaRecorder=null,recordedChunks=[];
 
-let previewAudioCtx=null;
+let lyricLines=[],lineTimes=[],highlightTimer=null,previewCtx=null;
 
 const backingAudio=$("backingAudio"),voiceAudio=$("voiceAudio");
 
 function status(el,msg,kind=""){
 
-  el.textContent=msg;
+ el.textContent=msg;
 
-  el.className="status"+(kind?" "+kind:"");
+ el.className="status"+(kind?" "+kind:"");
 
 }
 
 function mainStatus(msg,kind=""){status($("mainStatus"),msg,kind)}
 
-function showAuth(message){
+function showAuth(msg){
 
-  $("loading").style.display="none";
+ $("loading").style.display="none";
 
-  $("authScreen").style.display="block";
+ $("authScreen").style.display="block";
 
-  $("app").style.display="none";
+ $("app").style.display="none";
 
-  $("logoutBtn").style.display="none";
+ $("logoutBtn").style.display="none";
 
-  if(message)status($("authMessage"),message);
+ if(msg)status($("authMessage"),msg);
 
 }
 
 function showApp(){
 
-  $("loading").style.display="none";
+ $("loading").style.display="none";
 
-  $("authScreen").style.display="none";
+ $("authScreen").style.display="none";
 
-  $("app").style.display="block";
+ $("app").style.display="block";
 
-  $("logoutBtn").style.display="inline-block";
+ $("logoutBtn").style.display="inline-block";
 
 }
 
 function switchTab(name){
 
-  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
 
-  document.querySelectorAll(".tabpage").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
+ document.querySelectorAll(".tabpage").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
 
-  window.scrollTo({top:0,behavior:"smooth"});
-
-}
-
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
-
-document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.goto)));
-
-function getLyrics(){
-
-  return $("lyricsInput").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+ window.scrollTo({top:0,behavior:"smooth"});
 
 }
 
-function parseTimes(v){
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 
-  if(!Array.isArray(v))return [];
+document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>switchTab(b.dataset.goto));
 
-  return v.map(Number);
+function getLyrics(){return $("lyricsInput").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)}
 
-}
+function parseTimes(v){return Array.isArray(v)?v.map(Number):[]}
 
 function rebuildLines(preserve=true){
 
-  const oldL=lyricLines.slice(),oldT=lineTimes.slice();
+ const oldL=lyricLines.slice(),oldT=lineTimes.slice();
 
-  lyricLines=getLyrics();
+ lyricLines=getLyrics();
 
-  lineTimes=lyricLines.map((line,i)=>{
+ lineTimes=lyricLines.map((line,i)=>{
 
-    if(preserve){
+  const j=oldL.indexOf(line);
 
-      const j=oldL.indexOf(line);
+  if(preserve&&j>=0&&Number.isFinite(oldT[j]))return oldT[j];
 
-      if(j>=0&&Number.isFinite(oldT[j]))return oldT[j];
+  if(preserve&&Number.isFinite(oldT[i]))return oldT[i];
 
-      if(Number.isFinite(oldT[i]))return oldT[i];
+  return i*Math.max(.5,Number($("lineDuration").value)||4);
 
-    }
+ });
 
-    return i*Math.max(.5,Number($("lineDuration").value)||4);
-
-  });
-
-  renderLyrics();
+ renderLyrics();
 
 }
 
-function activeLineAt(seconds){
+function activeLineAt(t){
 
-  let a=-1;
+ let a=-1;
 
-  for(let i=0;i<lineTimes.length;i++){
+ for(let i=0;i<lineTimes.length;i++){if(t>=lineTimes[i])a=i;else break}
 
-    if(seconds>=lineTimes[i])a=i;
-
-    else break;
-
-  }
-
-  return a;
+ return a;
 
 }
 
-function renderLyrics(activeIndex=activeLineAt(backingAudio.currentTime||0)){
+function renderLyrics(active=activeLineAt(backingAudio.currentTime||0)){
 
-  const view=$("lyricsView"),sel=$("selectedLine");
+ const view=$("lyricsView"),sel=$("selectedLine");
 
-  view.replaceChildren();
+ view.replaceChildren();sel.replaceChildren();
 
-  sel.replaceChildren();
+ if(!lyricLines.length){
 
-  if(!lyricLines.length){
+  view.textContent="Enter your lyrics to see them here.";
 
-    view.textContent="Enter your lyrics to see them here.";
+  sel.add(new Option("No lyric lines",""));
 
-    const o=document.createElement("option");
+  $("recordLyrics").textContent="Your lyrics will appear here.";
 
-    o.value="";
+  return;
 
-    o.textContent="No lyric lines";
+ }
 
-    sel.appendChild(o);
+ lyricLines.forEach((line,i)=>{
 
-    $("recordLyrics").textContent="Your lyrics will appear here.";
+  const d=document.createElement("div");
 
-    return;
+  d.className="lyric-line"+(i===active?" active":"");
 
-  }
+  d.dataset.index=i;d.textContent=line;
 
-  lyricLines.forEach((line,i)=>{
+  d.onclick=()=>{
 
-    const d=document.createElement("div");
+   sel.value=String(i);$("selectedTime").value=lineTimes[i]??0;
 
-    d.className="lyric-line"+(i===activeIndex?" active":"");
+   if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
 
-    d.dataset.index=String(i);
+  };
 
-    d.dataset.color=["blue","green","yellow"][i%3];
+  view.appendChild(d);
 
-    d.textContent=line;
+  sel.add(new Option((i+1)+". "+line.slice(0,45)+" — "+(lineTimes[i]||0).toFixed(2)+"s",String(i)));
 
-    d.addEventListener("click",()=>{
+ });
 
-      sel.value=String(i);
+ if(active>=0){
 
-      $("selectedTime").value=lineTimes[i]??0;
+  const el=view.querySelector('[data-index="'+active+'"]');
 
-      if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
+  if(el)el.scrollIntoView({block:"nearest"});
 
-    });
+ }
 
-    view.appendChild(d);
-
-    const o=document.createElement("option");
-
-    o.value=String(i);
-
-    o.textContent=`${i+1}. ${line.slice(0,45)}${line.length>45?"…":""} — ${(lineTimes[i]||0).toFixed(2)}s`;
-
-    sel.appendChild(o);
-
-  });
-
-  if(activeIndex>=0){
-
-    const a=view.querySelector(`[data-index="${activeIndex}"]`);
-
-    if(a)a.scrollIntoView({block:"nearest"});
-
-  }
-
-  $("recordLyrics").textContent=activeIndex>=0?(lyricLines[activeIndex]||""):"Get ready…";
-
-  $("recordLyrics").dataset.color=activeIndex>=0?["blue","green","yellow"][activeIndex%3]:"blue";
+ $("recordLyrics").textContent=active>=0?(lyricLines[active]||""):"Get ready…";
 
 }
 
 function refreshHighlight(){renderLyrics(activeLineAt(backingAudio.currentTime||0))}
 
-function stopHighlight(){
+function stopHighlight(){if(highlightTimer)clearInterval(highlightTimer);highlightTimer=null}
 
-  if(highlightTimer)clearInterval(highlightTimer);
-
-  highlightTimer=null;
-
-}
-
-function startHighlight(){
-
-  stopHighlight();
-
-  highlightTimer=setInterval(refreshHighlight,100);
-
-  refreshHighlight();
-
-}
+function startHighlight(){stopHighlight();highlightTimer=setInterval(refreshHighlight,150);refreshHighlight()}
 
 async function decodeBlob(blob){
 
-  const AC=window.AudioContext||window.webkitAudioContext;
+ const AC=window.AudioContext||window.webkitAudioContext;
 
-  if(!AC)throw Error("Web Audio is not supported by this browser.");
+ if(!AC)throw Error("Web Audio is not supported by this browser.");
 
-  const ctx=new AC();
+ const ctx=new AC();
 
-  try{
+ try{return await ctx.decodeAudioData(await blob.arrayBuffer())}
 
-    return await ctx.decodeAudioData(await blob.arrayBuffer());
-
-  }finally{
-
-    await ctx.close();
-
-  }
+ finally{await ctx.close()}
 
 }
 
-/* MULTI-FILE IMPORT
+function selectedVoiceStem(){return stems.find(s=>s.id===voiceStemId)||null}
 
-   First selected file: backing/instrumental.
+function backingStems(){return stems.filter(s=>s.id!==voiceStemId)}
 
-   Second selected file: isolated vocal stem.
+function releaseStem(s){
 
-*/
+ if(s.objectUrl)URL.revokeObjectURL(s.objectUrl);
 
-async function loadBackingFile(file){
+}
 
-  const decoded=await decodeBlob(file);
+function updateStemUI(){
 
-  if(backingObjectUrl)URL.revokeObjectURL(backingObjectUrl);
+ const list=$("stemList");
 
-  backingObjectUrl=URL.createObjectURL(file);
+ list.replaceChildren();
+
+ if(!stems.length){
+
+  list.innerHTML='<p class="muted">Your imported files will appear here.</p>';
+
+  backingBuffer=null;voiceBuffer=null;voiceBlob=null;
+
+  backingAudio.removeAttribute("src");backingAudio.load();
+
+  voiceAudio.removeAttribute("src");voiceAudio.load();
+
+  status($("audioInfo"),"No backing tracks loaded.");
+
+  status($("recordStatus"),"Import backing stems to record with karaoke.");
+
+  status($("fixerStatus"),"Import or record a vocal track.");
+
+  return;
+
+ }
+
+ stems.forEach(s=>{
+
+  const item=document.createElement("div");item.className="stem-item";
+
+  const name=document.createElement("div");name.className="stem-name";
+
+  name.textContent=s.file.name+" · "+s.buffer.duration.toFixed(1)+" sec";
+
+  const choose=document.createElement("select");
+
+  choose.setAttribute("aria-label","Stem role for "+s.file.name);
+
+  choose.add(new Option("Backing stem","backing"));
+
+  choose.add(new Option("Vocals","vocals"));
+
+  choose.value=s.id===voiceStemId?"vocals":"backing";
+
+  choose.onchange=()=>{
+
+   if(choose.value==="vocals"){
+
+    voiceStemId=s.id;
+
+   }else if(voiceStemId===s.id){
+
+    voiceStemId=null;
+
+   }
+
+   syncTracks();
+
+  };
+
+  const remove=document.createElement("button");remove.className="danger";remove.textContent="Remove";
+
+  remove.onclick=()=>{
+
+   const removed=stems.find(x=>x.id===s.id);
+
+   if(removed)releaseStem(removed);
+
+   stems=stems.filter(x=>x.id!==s.id);
+
+   if(voiceStemId===s.id)voiceStemId=null;
+
+   syncTracks();
+
+  };
+
+  item.append(name,choose,remove);list.appendChild(item);
+
+ });
+
+ syncTrackBuffers();
+
+}
+
+function syncTrackBuffers(){
+
+ const backs=backingStems();
+
+ backingBuffer=backs[0]?.buffer||null;
+
+ const vocal=selectedVoiceStem();
+
+ voiceBuffer=vocal?.buffer||null;
+
+ voiceBlob=vocal?.file||null;
+
+ if(backingObjectUrl){URL.revokeObjectURL(backingObjectUrl);backingObjectUrl=null}
+
+ if(backs.length){
+
+  backingObjectUrl=URL.createObjectURL(backs[0].file);
 
   backingAudio.src=backingObjectUrl;
 
-  backingBuffer=decoded;
+  status($("audioInfo"),backs.length+" backing stem(s) selected. Preview uses "+backs[0].file.name+". Export mixes all backing stems.","good");
 
-  status($("audioInfo"),`${file.name} · ${decoded.duration.toFixed(1)} seconds · ${(file.size/1048576).toFixed(2)} MB`,"good");
+ }else{
 
-  if(!$("projectTitle").value.trim()){
+  backingAudio.removeAttribute("src");backingAudio.load();
 
-    $("projectTitle").value=file.name.replace(/\.[^.]+$/,"").slice(0,120);
+  status($("audioInfo"),"No backing stems selected. Set at least one file to Backing.");
 
-  }
+ }
 
-  if(lyricLines.length)estimateTiming(false);
+ if(voiceObjectUrl){URL.revokeObjectURL(voiceObjectUrl);voiceObjectUrl=null}
 
-}
+ if(vocal){
 
-async function loadVocalFile(file){
-
-  const decoded=await decodeBlob(file);
-
-  if(voiceObjectUrl)URL.revokeObjectURL(voiceObjectUrl);
-
-  voiceObjectUrl=URL.createObjectURL(file);
+  voiceObjectUrl=URL.createObjectURL(vocal.file);
 
   voiceAudio.src=voiceObjectUrl;
 
-  voiceBuffer=decoded;
+  status($("recordStatus"),"Vocal stem: "+vocal.file.name,"good");
 
-  voiceBlob=file;
+  status($("fixerStatus"),"Vocal stem ready for processing.","good");
 
-  $("voiceOffset").value="0";
+ }else{
 
-  status($("recordStatus"),`Vocal stem loaded: ${file.name} · ${decoded.duration.toFixed(1)} seconds`,"good");
+  voiceAudio.removeAttribute("src");voiceAudio.load();
 
-  status($("fixerStatus"),"Vocal stem ready. Preview or export to process it.","good");
+  status($("recordStatus"),"No imported vocal stem. You can record vocals or designate a stem as Vocals.");
+
+  status($("fixerStatus"),"Choose one imported stem as Vocals to process it.");
+
+ }
+
+ if(backingBuffer&&lyricLines.length)estimateTiming(false);
 
 }
 
-async function importMultipleAudioFiles(fileList){
+function syncTracks(){updateStemUI()}
 
-  const files=Array.from(fileList||[]);
+async function importAudioFiles(fileList){
 
-  const valid=files.filter(f=>
+ const files=Array.from(fileList||[]);
 
-    f.type.startsWith("audio/")||
+ if(!files.length)return;
 
-    /\.(mp3|wav|m4a|aac|ogg|flac|webm|mp4)$/i.test(f.name)
+ const valid=files.filter(f=>f.type.startsWith("audio/")||/\.(mp3|wav|m4a|aac|ogg|flac|webm|mp4)$/i.test(f.name));
 
-  );
+ if(!valid.length){
 
-  const report=$("multiUploadStatus");
+  status($("multiUploadStatus"),"No supported audio files selected.","bad");
 
-  const songReport=$("songUploadStatus");
+  return;
 
-  if(!valid.length){
+ }
 
-    const msg="Select one or two audio files supported by your browser.";
+ $("quickAudioFile").disabled=true;$("songFile").disabled=true;
 
-    status(report,msg,"bad");
+ let loaded=0,failed=[];
 
-    status(songReport,msg,"bad");
+ status($("multiUploadStatus"),"Importing "+valid.length+" file(s)…");
 
-    return;
-
-  }
-
-  if(valid.length>2){
-
-    const msg="You selected "+valid.length+" files. Select two files per import: backing track first, vocals second.";
-
-    status(report,msg,"bad");
-
-    status(songReport,msg,"bad");
-
-    return;
-
-  }
-
-  $("quickAudioFile").disabled=true;
-
-  $("songFile").disabled=true;
+ for(const file of valid){
 
   try{
 
-    status(report,"Importing "+valid.length+" audio file(s)…");
+   const buffer=await decodeBlob(file);
 
-    status(songReport,"Importing "+valid.length+" audio file(s)…");
+   const objectUrl=URL.createObjectURL(file);
 
-    await loadBackingFile(valid[0]);
+   stems.push({id:nextStemId++,file,buffer,objectUrl});
 
-    if(valid.length===2){
+   loaded++;
 
-      await loadVocalFile(valid[1]);
+  }catch(e){failed.push(file.name+": "+(e.message||"could not decode"))}
 
-      const msg="Both tracks loaded. Backing: "+valid[0].name+" | Vocals: "+valid[1].name;
+ }
 
-      status(report,msg,"good");
+ if(!voiceStemId&&stems.length===1)voiceStemId=null;
 
-      status(songReport,msg,"good");
+ updateStemUI();
 
-      mainStatus("Backing track and vocal stem imported successfully.","good");
+ const msg="Imported "+loaded+" file(s). Total stems: "+stems.length+". Choose Vocals beside one file; the rest will be mixed as backing.";
 
-    }else{
+ status($("multiUploadStatus"),failed.length?msg+" Failed: "+failed.join("; "):msg,failed.length?"bad":"good");
 
-      const msg="Backing track loaded: "+valid[0].name+". You can import a second file containing the separated vocals.";
+ mainStatus(failed.length?"Some files could not be imported. Try WAV or MP3 versions.":"Audio stems imported successfully.","good");
 
-      status(report,msg,"good");
+ $("quickAudioFile").value="";$("songFile").value="";
 
-      status(songReport,msg,"good");
-
-      mainStatus("Backing track imported successfully.","good");
-
-    }
-
-  }catch(err){
-
-    const msg="Import failed: "+(err.message||"This audio file could not be decoded. Try a WAV or MP3 file.");
-
-    status(report,msg,"bad");
-
-    status(songReport,msg,"bad");
-
-    mainStatus(msg,"bad");
-
-  }finally{
-
-    $("quickAudioFile").disabled=false;
-
-    $("songFile").disabled=false;
-
-    $("quickAudioFile").value="";
-
-    $("songFile").value="";
-
-  }
+ $("quickAudioFile").disabled=false;$("songFile").disabled=false;
 
 }
 
-$("quickAudioFile").addEventListener("change",e=>importMultipleAudioFiles(e.target.files));
+$("quickAudioFile").onchange=e=>importAudioFiles(e.target.files);
 
-$("songFile").addEventListener("change",e=>importMultipleAudioFiles(e.target.files));
+$("songFile").onchange=e=>importAudioFiles(e.target.files);
+
+$("addMoreBtn").onclick=()=>$("quickAudioFile").click();
+
+$("clearStemsBtn").onclick=()=>{
+
+ if(!confirm("Remove all imported audio stems?"))return;
+
+ stems.forEach(releaseStem);stems=[];voiceStemId=null;
+
+ syncTracks();status($("multiUploadStatus"),"All stems cleared.");
+
+};
 
 $("importLyricsBtn").onclick=()=>$("lyricsFile").click();
 
-$("lyricsFile").addEventListener("change",async e=>{
+$("lyricsFile").onchange=async e=>{
 
-  const f=e.target.files?.[0];
+ const f=e.target.files?.[0];if(!f)return;
 
-  if(!f)return;
+ try{$("lyricsInput").value=await f.text();rebuildLines(false);status($("lyricsStatus"),"Lyrics imported from "+f.name,"good")}
 
-  try{
+ catch(err){status($("lyricsStatus"),"Could not read lyrics: "+err.message,"bad")}
 
-    $("lyricsInput").value=await f.text();
+ e.target.value="";
 
-    rebuildLines(false);
+};
 
-    status($("lyricsStatus"),"Lyrics imported from "+f.name,"good");
-
-  }catch(err){
-
-    status($("lyricsStatus"),"Could not read lyrics: "+err.message,"bad");
-
-  }
-
-  e.target.value="";
-
-});
-
-$("lyricsInput").addEventListener("input",()=>{
-
-  rebuildLines(true);
-
-  status($("lyricsStatus"),"Lyrics updated. Save the project to keep changes.");
-
-});
+$("lyricsInput").oninput=()=>{rebuildLines(true);status($("lyricsStatus"),"Lyrics updated. Save to keep changes.")};
 
 function estimateTiming(show=true){
 
-  lyricLines=getLyrics();
+ lyricLines=getLyrics();
 
-  if(!lyricLines.length){
+ if(!lyricLines.length){status($("lyricsStatus"),"Enter lyrics first.","bad");return}
 
-    status($("lyricsStatus"),"Enter lyrics first.","bad");
+ const start=Math.max(0,Number($("startOffset").value)||0);
 
-    return;
+ const duration=backingStems().reduce((m,s)=>Math.max(m,s.buffer.duration),0);
 
-  }
+ const requested=Math.max(.5,Number($("lineDuration").value)||4);
 
-  const start=Math.max(0,Number($("startOffset").value)||0);
+ const per=duration>start?Math.max(.5,(duration-start)/lyricLines.length):requested;
 
-  const dur=backingBuffer?.duration||backingAudio.duration||0;
+ lineTimes=lyricLines.map((_,i)=>Number((start+i*per).toFixed(3)));
 
-  const requested=Math.max(.5,Number($("lineDuration").value)||4);
+ renderLyrics();
 
-  const per=dur>start?Math.max(.5,(dur-start)/lyricLines.length):requested;
-
-  lineTimes=lyricLines.map((_,i)=>Number((start+i*per).toFixed(3)));
-
-  renderLyrics();
-
-  if(show)status($("lyricsStatus"),"Estimated timing created. Fine-tune line starts for accurate karaoke sync.");
+ if(show)status($("lyricsStatus"),"Estimated timing created. Fine-tune each line to match the song.");
 
 }
 
 $("estimateBtn").onclick=()=>estimateTiming();
 
-$("applyTimingBtn").onclick=()=>estimateTiming();
+$("selectedLine").onchange=()=>{
 
-$("selectedLine").addEventListener("change",()=>{
+ const i=Number($("selectedLine").value);$("selectedTime").value=lineTimes[i]??0;
 
-  const i=Number($("selectedLine").value);
-
-  $("selectedTime").value=lineTimes[i]??0;
-
-});
+};
 
 $("setLineTimeBtn").onclick=()=>{
 
-  const i=Number($("selectedLine").value),t=Number($("selectedTime").value);
+ const i=Number($("selectedLine").value),t=Number($("selectedTime").value);
 
-  if(!Number.isInteger(i)||i<0||i>=lyricLines.length||!Number.isFinite(t)||t<0){
+ if(!Number.isInteger(i)||i<0||i>=lyricLines.length||!Number.isFinite(t)||t<0){
 
-    status($("lyricsStatus"),"Choose a lyric line and valid start time.","bad");
+  status($("lyricsStatus"),"Choose a lyric line and valid start time.","bad");return;
 
-    return;
+ }
 
-  }
+ lineTimes[i]=t;renderLyrics(activeLineAt(backingAudio.currentTime||0));
 
-  lineTimes[i]=t;
+ $("selectedLine").value=String(i);$("selectedTime").value=t;
 
-  renderLyrics(activeLineAt(backingAudio.currentTime||0));
-
-  $("selectedLine").value=String(i);
-
-  $("selectedTime").value=t;
-
-  status($("lyricsStatus"),"Line timing updated. Save to keep it.");
+ status($("lyricsStatus"),"Line timing updated. Save to keep it.");
 
 };
 
 function moveLine(d){
 
-  if(!lyricLines.length)return;
+ if(!lyricLines.length)return;
 
-  const i=Math.max(0,Math.min(lyricLines.length-1,(Number($("selectedLine").value)||0)+d));
+ const i=Math.max(0,Math.min(lyricLines.length-1,(Number($("selectedLine").value)||0)+d));
 
-  $("selectedLine").value=String(i);
+ $("selectedLine").value=String(i);$("selectedTime").value=lineTimes[i]??0;
 
-  $("selectedTime").value=lineTimes[i]??0;
+ if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
 
-  if(backingBuffer)backingAudio.currentTime=lineTimes[i]||0;
-
-  renderLyrics(i);
+ renderLyrics(i);
 
 }
 
@@ -978,657 +938,363 @@ $("nextLineBtn").onclick=()=>moveLine(1);
 
 $("playBtn").onclick=async()=>{
 
-  if(!backingBuffer)return status($("lyricsStatus"),"Load a song first.","bad");
+ if(!backingBuffer){status($("lyricsStatus"),"Load a backing stem first.","bad");return}
 
-  try{
+ try{
 
-    if(backingAudio.paused){
+  if(backingAudio.paused){
 
-      await backingAudio.play();
+   await backingAudio.play();$("playBtn").textContent="Pause playback";startHighlight();
 
-      $("playBtn").textContent="Pause playback";
+  }else{backingAudio.pause();$("playBtn").textContent="Play song with lyrics";stopHighlight()}
 
-      startHighlight();
-
-    }else{
-
-      backingAudio.pause();
-
-      $("playBtn").textContent="Play song with lyrics";
-
-      stopHighlight();
-
-    }
-
-  }catch(e){
-
-    status($("lyricsStatus"),"Playback could not start: "+e.message,"bad");
-
-  }
+ }catch(e){status($("lyricsStatus"),"Playback could not start: "+e.message,"bad")}
 
 };
 
-backingAudio.addEventListener("play",startHighlight);
+backingAudio.onplay=startHighlight;
 
-backingAudio.addEventListener("pause",()=>{
+backingAudio.onpause=()=>{stopHighlight();$("playBtn").textContent="Play song with lyrics";refreshHighlight()};
 
-  $("playBtn").textContent="Play song with lyrics";
+backingAudio.onended=()=>{stopHighlight();$("playBtn").textContent="Play song with lyrics";$("recordLyrics").textContent="Song finished."};
 
-  stopHighlight();
+backingAudio.onseeked=refreshHighlight;
 
-  refreshHighlight();
-
-});
-
-backingAudio.addEventListener("ended",()=>{
-
-  stopHighlight();
-
-  $("playBtn").textContent="Play song with lyrics";
-
-  $("recordLyrics").textContent="Song finished.";
-
-});
-
-backingAudio.addEventListener("seeked",refreshHighlight);
-
-/* Supabase authentication */
+/* Authentication */
 
 $("toggleAuth").onclick=()=>{
 
-  authMode=authMode==="signin"?"signup":"signin";
+ authMode=authMode==="signin"?"signup":"signin";
 
-  $("authTitle").textContent=authMode==="signin"?"Welcome back":"Create your account";
+ $("authTitle").textContent=authMode==="signin"?"Welcome back":"Create your account";
 
-  $("authSubmit").textContent=authMode==="signin"?"Sign in":"Create account";
+ $("authSubmit").textContent=authMode==="signin"?"Sign in":"Create account";
 
-  $("toggleAuth").textContent=authMode==="signin"?"Create an account":"Already have an account? Sign in";
+ $("toggleAuth").textContent=authMode==="signin"?"Create an account":"Already have an account? Sign in";
 
-  $("password").autocomplete=authMode==="signin"?"current-password":"new-password";
+ $("password").autocomplete=authMode==="signin"?"current-password":"new-password";
 
 };
 
-$("authForm").addEventListener("submit",async e=>{
+$("authForm").onsubmit=async e=>{
 
-  e.preventDefault();
+ e.preventDefault();
 
-  if(!supabase)return status($("authMessage"),"Supabase did not load. Refresh and try again.","bad");
+ if(!supabase){status($("authMessage"),"Supabase did not load. Refresh and try again.","bad");return}
 
-  $("authSubmit").disabled=true;
+ $("authSubmit").disabled=true;
 
-  try{
+ try{
 
-    const email=$("email").value.trim(),password=$("password").value;
+  const email=$("email").value.trim(),password=$("password").value;
 
-    if(authMode==="signup"){
+  if(authMode==="signup"){
 
-      const {data,error}=await supabase.auth.signUp({email,password});
+   const {data,error}=await supabase.auth.signUp({email,password});if(error)throw error;
 
-      if(error)throw error;
+   if(data.session){currentUser=data.user;showApp();await loadProjects()}
 
-      if(data.session){
+   else status($("authMessage"),"Account created. Check your email for confirmation, then sign in.","good");
 
-        currentUser=data.user;
+  }else{
 
-        showApp();
+   const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;
 
-        await loadProjects();
-
-      }else{
-
-        status($("authMessage"),"Account created. Check your email for confirmation, then sign in.","good");
-
-      }
-
-    }else{
-
-      const {data,error}=await supabase.auth.signInWithPassword({email,password});
-
-      if(error)throw error;
-
-      currentUser=data.user;
-
-      showApp();
-
-      await loadProjects();
-
-    }
-
-  }catch(e){
-
-    status($("authMessage"),e.message||"Authentication failed.","bad");
-
-  }finally{
-
-    $("authSubmit").disabled=false;
+   currentUser=data.user;showApp();await loadProjects();
 
   }
 
-});
+ }catch(e){status($("authMessage"),e.message||"Authentication failed.","bad")}
+
+ finally{$("authSubmit").disabled=false}
+
+};
 
 $("forgotPassword").onclick=async()=>{
 
-  if(!supabase)return;
+ if(!supabase)return;
 
-  const email=$("email").value.trim();
+ const email=$("email").value.trim();
 
-  if(!email)return status($("authMessage"),"Enter your email first.","bad");
+ if(!email){status($("authMessage"),"Enter your email first.","bad");return}
 
-  try{
+ try{
 
-    const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
 
-    if(error)throw error;
+  if(error)throw error;
 
-    status($("authMessage"),"If the account exists, a password reset email has been requested.","good");
+  status($("authMessage"),"If the account exists, a password reset email has been requested.","good");
 
-  }catch(e){
-
-    status($("authMessage"),e.message||"Could not request reset.","bad");
-
-  }
+ }catch(e){status($("authMessage"),e.message||"Could not request reset.","bad")}
 
 };
 
 $("logoutBtn").onclick=async()=>{
 
-  stopHighlight();
+ stopHighlight();
 
-  if(supabase){
+ if(supabase){const {error}=await supabase.auth.signOut();if(error)return mainStatus(error.message,"bad")}
 
-    const {error}=await supabase.auth.signOut();
-
-    if(error)return mainStatus(error.message,"bad");
-
-  }
-
-  currentUser=null;
-
-  showAuth("You have been signed out.");
+ currentUser=null;showAuth("You have been signed out.");
 
 };
 
-/* Microphone recording */
+/* Recording */
 
-$("recordBtn").addEventListener("click",async()=>{
+$("recordBtn").onclick=async()=>{
 
-  try{
+ try{
 
-    if(!backingBuffer)throw Error("Import a backing track before recording.");
+  if(!backingStems().length)throw Error("Import at least one backing stem first.");
 
-    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw Error("Recording needs Safari on HTTPS.");
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw Error("Recording requires Safari on HTTPS.");
 
-    $("recordBtn").disabled=true;
+  $("recordBtn").disabled=true;
 
-    micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
 
-    recordedChunks=[];
+  recordedChunks=[];
 
-    const types=["audio/mp4","audio/webm;codecs=opus","audio/webm"];
+  const types=["audio/mp4","audio/webm;codecs=opus","audio/webm"];
 
-    const type=types.find(t=>MediaRecorder.isTypeSupported(t));
+  const type=types.find(t=>MediaRecorder.isTypeSupported(t));
 
-    mediaRecorder=type?new MediaRecorder(micStream,{mimeType:type}):new MediaRecorder(micStream);
+  mediaRecorder=type?new MediaRecorder(micStream,{mimeType:type}):new MediaRecorder(micStream);
 
-    mediaRecorder.ondataavailable=e=>{if(e.data?.size)recordedChunks.push(e.data)};
+  mediaRecorder.ondataavailable=e=>{if(e.data?.size)recordedChunks.push(e.data)};
 
-    mediaRecorder.onerror=e=>status($("recordStatus"),"Recording error: "+(e.error?.message||"unknown error"),"bad");
+  mediaRecorder.onstop=async()=>{
 
-    mediaRecorder.onstop=async()=>{
+   try{
 
-      try{
+    const blob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||"audio/mp4"});
 
-        voiceBlob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||"audio/mp4"});
+    const buffer=await decodeBlob(blob);
 
-        if(voiceObjectUrl)URL.revokeObjectURL(voiceObjectUrl);
+    const file=new File([blob],"Recorded vocals."+((blob.type||"").includes("mp4")?"m4a":"webm"),{type:blob.type});
 
-        voiceObjectUrl=URL.createObjectURL(voiceBlob);
+    const s={id:nextStemId++,file,buffer,objectUrl:URL.createObjectURL(file)};
 
-        voiceAudio.src=voiceObjectUrl;
+    stems.push(s);voiceStemId=s.id;syncTracks();
 
-        voiceBuffer=await decodeBlob(voiceBlob);
+    status($("recordStatus"),"Recording saved as a vocal stem · "+buffer.duration.toFixed(1)+" seconds","good");
 
-        status($("recordStatus"),"Recording ready · "+voiceBuffer.duration.toFixed(1)+" seconds","good");
+    status($("fixerStatus"),"Recording ready for vocal processing.","good");
 
-        status($("fixerStatus"),"Recording ready. Preview or export to process your vocals.","good");
+   }catch(e){status($("recordStatus"),"Recording could not be decoded: "+e.message,"bad")}
 
-        mainStatus("Recording captured successfully.","good");
+   finally{if(micStream)micStream.getTracks().forEach(t=>t.stop());micStream=null}
 
-      }catch(e){
+  };
 
-        voiceBuffer=null;
+  mediaRecorder.start();
 
-        status($("recordStatus"),"Recording could not be decoded: "+e.message,"bad");
+  backingAudio.currentTime=0;renderLyrics(-1);
 
-      }finally{
+  await backingAudio.play();startHighlight();
 
-        if(micStream)micStream.getTracks().forEach(t=>t.stop());
+  $("stopRecordBtn").disabled=false;
 
-        micStream=null;
+  status($("recordStatus"),"Recording… sing along with the highlighted lyrics.","good");
 
-      }
+ }catch(e){
 
-    };
+  if(micStream)micStream.getTracks().forEach(t=>t.stop());
 
-    mediaRecorder.start();
+  micStream=null;$("recordBtn").disabled=false;
 
-    recordingStartedAt=Date.now();
+  status($("recordStatus"),e.message||"Could not start recording.","bad");
 
-    backingAudio.currentTime=0;
+ }
 
-    renderLyrics(-1);
-
-    await backingAudio.play();
-
-    startHighlight();
-
-    $("stopRecordBtn").disabled=false;
-
-    status($("recordStatus"),"Recording… sing along with the highlighted lyrics.","good");
-
-  }catch(e){
-
-    if(micStream)micStream.getTracks().forEach(t=>t.stop());
-
-    micStream=null;
-
-    $("recordBtn").disabled=false;
-
-    status($("recordStatus"),e.message||"Could not start recording.","bad");
-
-  }
-
-});
+};
 
 $("stopRecordBtn").onclick=()=>{
 
-  if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();
+ if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();
 
-  backingAudio.pause();
+ backingAudio.pause();$("recordBtn").disabled=false;$("stopRecordBtn").disabled=true;
 
-  $("recordBtn").disabled=false;
-
-  $("stopRecordBtn").disabled=true;
-
-  status($("recordStatus"),"Finishing recording… "+((Date.now()-recordingStartedAt)/1000).toFixed(1)+" seconds captured.");
+ status($("recordStatus"),"Finishing recording…");
 
 };
 
-/* Pitch correction */
+/* Vocal processing */
 
-const KEY_SCALES={
+function makeImpulse(ctx,seconds=1.3,decay=2.5){
 
- C:[0,2,4,5,7,9,11],Db:[1,3,5,6,8,10,0],D:[2,4,6,7,9,11,1],
+ const len=Math.floor(ctx.sampleRate*seconds),buf=ctx.createBuffer(2,len,ctx.sampleRate);
 
- Eb:[3,5,7,8,10,0,2],E:[4,6,8,9,11,1,3],F:[5,7,9,10,0,2,4],
+ for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay)}
 
- Gb:[6,8,10,11,1,3,5],G:[7,9,11,0,2,4,6],Ab:[8,10,0,1,3,5,7],
-
- A:[9,11,1,2,4,6,8],Bb:[10,0,2,3,5,7,9],B:[11,1,3,4,6,8,10]
-
-};
-
-function nearestScaleMidi(midi){
-
-  const key=$("musicalKey").value;
-
-  if(key==="chromatic")return Math.round(midi);
-
-  const allowed=KEY_SCALES[key];
-
-  let best=Math.round(midi),dist=999;
-
-  for(let n=Math.round(midi)-6;n<=Math.round(midi)+6;n++){
-
-    if(allowed.includes(((n%12)+12)%12)&&Math.abs(n-midi)<dist){
-
-      best=n;dist=Math.abs(n-midi);
-
-    }
-
-  }
-
-  return best;
+ return buf;
 
 }
 
-function estimatePitch(data,sr){
+function connectVocalChain(ctx,source,destination){
 
-  let mean=0;
+ const mode=$("enhancementMode").value;
 
-  for(let i=0;i<data.length;i++)mean+=data[i];
+ const hp=ctx.createBiquadFilter();hp.type="highpass";hp.frequency.value=mode==="gentle"?65:85;
 
-  mean/=data.length;
+ const clarity=ctx.createBiquadFilter();clarity.type="peaking";clarity.frequency.value=3200;clarity.Q.value=.85;clarity.gain.value=mode==="strong"?2.5:mode==="standard"?1.5:.7;
 
-  let energy=0;
+ const comp=ctx.createDynamicsCompressor();comp.threshold.value=mode==="strong"?-27:mode==="standard"?-23:-18;comp.knee.value=24;comp.ratio.value=mode==="strong"?5:mode==="standard"?3.5:2.3;comp.attack.value=.008;comp.release.value=.22;
 
-  for(let i=0;i<data.length;i++){const v=data[i]-mean;energy+=v*v}
+ source.connect(hp);hp.connect(clarity);clarity.connect(comp);comp.connect(destination);
 
-  if(energy/data.length<.000025)return null;
+ const rev=Number($("reverbAmount").value)/100;
 
-  const minLag=Math.floor(sr/1000),maxLag=Math.min(Math.floor(sr/70),data.length-2);
-
-  let bestLag=-1,best=-1;
-
-  for(let lag=minLag;lag<=maxLag;lag++){
-
-    let corr=0,n=data.length-lag;
-
-    for(let i=0;i<n;i++)corr+=(data[i]-mean)*(data[i+lag]-mean);
-
-    corr/=n;
-
-    if(corr>best){best=corr;bestLag=lag}
-
-  }
-
-  if(bestLag<0||best<.45)return null;
-
-  const freq=sr/bestLag;
-
-  if(freq<70||freq>1000)return null;
-
-  return 69+12*Math.log2(freq/440);
+ if(rev>0){const send=ctx.createGain();send.gain.value=rev*.35;const conv=ctx.createConvolver();conv.buffer=makeImpulse(ctx);clarity.connect(conv);conv.connect(send);send.connect(destination)}
 
 }
 
-async function autoTuneBuffer(input){
+$("reverbAmount").oninput=()=>$("reverbLabel").textContent=$("reverbAmount").value+"%";
 
-  const strength=Number($("tuneAmount").value)/100;
+$("voiceVolume").oninput=()=>$("voiceVolumeLabel").textContent=$("voiceVolume").value+"%";
 
-  if(strength<=0)return input;
+$("backingVolume").oninput=()=>$("backingVolumeLabel").textContent=$("backingVolume").value+"%";
 
-  const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();
-
-  try{
-
-    const out=ctx.createBuffer(input.numberOfChannels,input.length,input.sampleRate);
-
-    const sr=input.sampleRate,frame=2048,hop=512;
-
-    for(let c=0;c<input.numberOfChannels;c++){
-
-      const src=input.getChannelData(c),dst=out.getChannelData(c);
-
-      dst.set(src);
-
-      for(let start=0;start+frame<src.length;start+=hop){
-
-        const pitch=estimatePitch(src.subarray(start,start+frame),sr);
-
-        if(pitch===null)continue;
-
-        const delta=(nearestScaleMidi(pitch)-pitch)*strength;
-
-        if(Math.abs(delta)<.08)continue;
-
-        const ratio=Math.pow(2,delta/12),half=Math.floor(hop/2),center=start+Math.floor(frame/2);
-
-        for(let k=-half;k<half;k++){
-
-          const di=center+k,si=center+Math.round(k/ratio);
-
-          if(di<0||di>=src.length||si<0||si>=src.length)continue;
-
-          const fade=Math.max(0,Math.min(1,(k+half)/Math.max(1,hop*.15),(half-k)/Math.max(1,hop*.15)));
-
-          dst[di]=dst[di]*(1-fade*strength)+src[si]*fade*strength;
-
-        }
-
-      }
-
-    }
-
-    return out;
-
-  }finally{await ctx.close()}
-
-}
-
-function makeImpulse(ctx,seconds=1.35,decay=2.5){
-
-  const len=Math.floor(ctx.sampleRate*seconds),buf=ctx.createBuffer(2,len,ctx.sampleRate);
-
-  for(let c=0;c<2;c++){
-
-    const d=buf.getChannelData(c);
-
-    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);
-
-  }
-
-  return buf;
-
-}
-
-function connectAutomaticVocalChain(ctx,source,destination){
-
-  const mode=$("enhancementMode").value;
-
-  const hp=ctx.createBiquadFilter();
-
-  hp.type="highpass";hp.frequency.value=mode==="gentle"?65:85;
-
-  const warmth=ctx.createBiquadFilter();
-
-  warmth.type="peaking";warmth.frequency.value=240;warmth.Q.value=.8;warmth.gain.value=mode==="gentle"?0:1;
-
-  const clarity=ctx.createBiquadFilter();
-
-  clarity.type="peaking";clarity.frequency.value=3200;clarity.Q.value=.85;
-
-  clarity.gain.value=mode==="strong"?2.5:mode==="standard"?1.5:.7;
-
-  const comp=ctx.createDynamicsCompressor();
-
-  comp.threshold.value=mode==="strong"?-27:mode==="standard"?-23:-18;
-
-  comp.knee.value=24;comp.ratio.value=mode==="strong"?5:mode==="standard"?3.5:2.3;
-
-  comp.attack.value=.008;comp.release.value=.22;
-
-  source.connect(hp);hp.connect(warmth);warmth.connect(clarity);clarity.connect(comp);comp.connect(destination);
-
-  const rev=Number($("reverbAmount").value)/100;
-
-  if(rev>0){
-
-    const send=ctx.createGain();send.gain.value=rev*.35;
-
-    const conv=ctx.createConvolver();conv.buffer=makeImpulse(ctx);
-
-    clarity.connect(conv);conv.connect(send);send.connect(destination);
-
-  }
-
-}
-
-$("reverbAmount").oninput=()=>{$("reverbLabel").textContent=$("reverbAmount").value+"%"};
-
-$("tuneAmount").oninput=()=>{$("tuneLabel").textContent=$("tuneAmount").value+"%"};
-
-$("voiceVolume").oninput=()=>{$("voiceVolumeLabel").textContent=$("voiceVolume").value+"%"};
-
-$("backingVolume").oninput=()=>{$("backingVolumeLabel").textContent=$("backingVolume").value+"%"};
-
-$("masterVolume").oninput=()=>{$("masterVolumeLabel").textContent=$("masterVolume").value+"%"};
-
-$("enhancementMode").onchange=()=>status($("fixerStatus"),"Enhancement strength updated.");
+$("masterVolume").oninput=()=>$("masterVolumeLabel").textContent=$("masterVolume").value+"%";
 
 $("previewVoiceBtn").onclick=async()=>{
 
-  if(!voiceBuffer)return status($("fixerStatus"),"Load a vocal stem or record your voice first.","bad");
+ if(!voiceBuffer){status($("fixerStatus"),"Choose one stem as Vocals or record your voice first.","bad");return}
 
-  $("previewVoiceBtn").disabled=true;
+ $("previewVoiceBtn").disabled=true;
 
-  status($("fixerStatus"),"Preparing vocal preview…");
+ try{
 
-  try{
+  const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();previewCtx=ctx;await ctx.resume();
 
-    const tuned=await autoTuneBuffer(voiceBuffer);
+  const src=ctx.createBufferSource(),gain=ctx.createGain();src.buffer=voiceBuffer;
 
-    const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();
+  gain.gain.value=Number($("voiceVolume").value)/100;src.connect(gain);connectVocalChain(ctx,gain,ctx.destination);
 
-    previewAudioCtx=ctx;
+  src.onended=()=>{ctx.close().catch(()=>{});if(previewCtx===ctx)previewCtx=null};
 
-    await ctx.resume();
+  src.start();status($("fixerStatus"),"Playing processed vocal preview.","good");
 
-    const src=ctx.createBufferSource(),gain=ctx.createGain();
+ }catch(e){status($("fixerStatus"),"Preview failed: "+e.message,"bad")}
 
-    src.buffer=tuned;gain.gain.value=Number($("voiceVolume").value)/100;
-
-    src.connect(gain);connectAutomaticVocalChain(ctx,gain,ctx.destination);
-
-    src.onended=()=>{ctx.close().catch(()=>{});if(previewAudioCtx===ctx)previewAudioCtx=null};
-
-    src.start();
-
-    status($("fixerStatus"),"Playing processed vocal preview.","good");
-
-  }catch(e){
-
-    status($("fixerStatus"),"Preview failed: "+e.message,"bad");
-
-  }finally{
-
-    $("previewVoiceBtn").disabled=false;
-
-  }
+ finally{$("previewVoiceBtn").disabled=false}
 
 };
 
-/* Mix the backing track with the imported or recorded vocal. */
+/* Mix all backing stems together and add the separate vocal stem. */
 
 async function renderMix(){
 
-  if(!backingBuffer)throw Error("Import a backing track first.");
+ const backs=backingStems();
 
-  if(!voiceBuffer)throw Error("Import a separated vocal file or record your voice first.");
+ const vocal=selectedVoiceStem();
 
-  status($("exportStatus"),"Processing vocals…");
+ if(!backs.length)throw Error("Import and select at least one backing stem.");
 
-  const tuned=await autoTuneBuffer(voiceBuffer);
+ if(!vocal||!voiceBuffer)throw Error("Choose one imported file as Vocals, or record your voice.");
 
-  const sr=44100,offset=Math.max(0,Number($("voiceOffset").value)||0);
+ status($("exportStatus"),"Mixing "+backs.length+" backing stem(s) and the vocal track…");
 
-  const duration=Math.max(backingBuffer.duration,tuned.duration+offset);
+ const sr=44100;
 
-  if(duration>900)throw Error("Exports are limited to 15 minutes on this version.");
+ const duration=Math.max(...backs.map(s=>s.buffer.duration),voiceBuffer.duration+Math.max(0,Number($("voiceOffset").value)||0));
 
-  const Offline=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+ if(duration>900)throw Error("Exports are limited to 15 minutes on this version.");
 
-  if(!Offline)throw Error("Offline audio mixing is not supported.");
+ const Offline=window.OfflineAudioContext||window.webkitOfflineAudioContext;
 
-  const ctx=new Offline(2,Math.ceil(duration*sr),sr);
+ if(!Offline)throw Error("Offline audio mixing is not supported.");
 
-  const music=ctx.createBufferSource(),mg=ctx.createGain();
+ const ctx=new Offline(2,Math.ceil(duration*sr),sr);
 
-  music.buffer=backingBuffer;
+ const musicGain=ctx.createGain();musicGain.gain.value=Number($("backingVolume").value)/100;musicGain.connect(ctx.destination);
 
-  mg.gain.value=Number($("backingVolume").value)/100;
+ for(const stem of backs){
 
-  music.connect(mg);mg.connect(ctx.destination);music.start(0);
+  const src=ctx.createBufferSource();src.buffer=stem.buffer;
 
-  const vocal=ctx.createBufferSource(),vg=ctx.createGain();
+  src.connect(musicGain);src.start(0);
 
-  vocal.buffer=tuned;vg.gain.value=Number($("voiceVolume").value)/100;
+ }
 
-  vocal.connect(vg);connectAutomaticVocalChain(ctx,vg,ctx.destination);vocal.start(offset);
+ const src=ctx.createBufferSource();src.buffer=voiceBuffer;
 
-  const rendered=await ctx.startRendering();
+ const vg=ctx.createGain();vg.gain.value=Number($("voiceVolume").value)/100;
 
-  const l=rendered.getChannelData(0),r=rendered.getChannelData(1);
+ src.connect(vg);connectVocalChain(ctx,vg,ctx.destination);
 
-  let peak=0;
+ src.start(Math.max(0,Number($("voiceOffset").value)||0));
 
-  for(let i=0;i<l.length;i++)peak=Math.max(peak,Math.abs(l[i]),Math.abs(r[i]));
+ const rendered=await ctx.startRendering();
 
-  const master=Number($("masterVolume").value)/100;
+ const l=rendered.getChannelData(0),r=rendered.getChannelData(1);
 
-  const scale=(peak>.95?.95/peak:1)*master;
+ let peak=0;for(let i=0;i<l.length;i++)peak=Math.max(peak,Math.abs(l[i]),Math.abs(r[i]));
 
-  for(let i=0;i<l.length;i++){l[i]*=scale;r[i]*=scale}
+ const master=Number($("masterVolume").value)/100,scale=(peak>.95?.95/peak:1)*master;
 
-  return rendered;
+ for(let i=0;i<l.length;i++){l[i]*=scale;r[i]*=scale}
+
+ return rendered;
 
 }
 
 function audioBufferToWav(b){
 
-  const ch=2,frames=b.length,align=ch*2,size=frames*align;
+ const ch=2,frames=b.length,align=ch*2,size=frames*align;
 
-  const arr=new ArrayBuffer(44+size),v=new DataView(arr);
+ const arr=new ArrayBuffer(44+size),v=new DataView(arr);
 
-  const write=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+ const write=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
 
-  write(0,"RIFF");v.setUint32(4,36+size,true);write(8,"WAVE");write(12,"fmt ");
+ write(0,"RIFF");v.setUint32(4,36+size,true);write(8,"WAVE");write(12,"fmt ");
 
-  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);
+ v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);
 
-  v.setUint32(24,b.sampleRate,true);v.setUint32(28,b.sampleRate*align,true);
+ v.setUint32(24,b.sampleRate,true);v.setUint32(28,b.sampleRate*align,true);
 
-  v.setUint16(32,align,true);v.setUint16(34,16,true);write(36,"data");v.setUint32(40,size,true);
+ v.setUint16(32,align,true);v.setUint16(34,16,true);write(36,"data");v.setUint32(40,size,true);
 
-  const data=[b.getChannelData(0),b.getChannelData(1)];
+ const data=[b.getChannelData(0),b.getChannelData(1)];let o=44;
 
-  let o=44;
+ for(let i=0;i<frames;i++)for(let c=0;c<ch;c++){const x=Math.max(-1,Math.min(1,data[c][i]));v.setInt16(o,x<0?x*32768:x*32767,true);o+=2}
 
-  for(let i=0;i<frames;i++)for(let c=0;c<ch;c++){
-
-    const s=Math.max(-1,Math.min(1,data[c][i]));
-
-    v.setInt16(o,s<0?s*32768:s*32767,true);o+=2;
-
-  }
-
-  return new Blob([arr],{type:"audio/wav"});
+ return new Blob([arr],{type:"audio/wav"});
 
 }
 
 function audioBufferToMp3(b,kbps){
 
-  if(!window.lamejs?.Mp3Encoder)throw Error("MP3 encoder failed to load. Check internet or export WAV.");
+ if(!window.lamejs?.Mp3Encoder)throw Error("MP3 encoder failed to load. Check internet or export WAV.");
 
-  const enc=new window.lamejs.Mp3Encoder(2,b.sampleRate,kbps);
+ const enc=new window.lamejs.Mp3Encoder(2,b.sampleRate,kbps),l=b.getChannelData(0),r=b.getChannelData(1),chunks=[],block=1152;
 
-  const l=b.getChannelData(0),r=b.getChannelData(1),chunks=[],block=1152;
+ for(let i=0;i<b.length;i+=block){
 
-  for(let i=0;i<b.length;i+=block){
+  const n=Math.min(block,b.length-i),a=new Int16Array(n),z=new Int16Array(n);
 
-    const n=Math.min(block,b.length-i),a=new Int16Array(n),z=new Int16Array(n);
+  for(let j=0;j<n;j++){const x=Math.max(-1,Math.min(1,l[i+j])),y=Math.max(-1,Math.min(1,r[i+j]));a[j]=x<0?x*32768:x*32767;z[j]=y<0?y*32768:y*32767}
 
-    for(let j=0;j<n;j++){
+  const out=enc.encodeBuffer(a,z);if(out.length)chunks.push(new Uint8Array(out));
 
-      const x=Math.max(-1,Math.min(1,l[i+j])),y=Math.max(-1,Math.min(1,r[i+j]));
+ }
 
-      a[j]=x<0?x*32768:x*32767;z[j]=y<0?y*32768:y*32767;
+ const last=enc.flush();if(last.length)chunks.push(new Uint8Array(last));
 
-    }
-
-    const out=enc.encodeBuffer(a,z);
-
-    if(out.length)chunks.push(new Uint8Array(out));
-
-  }
-
-  const last=enc.flush();
-
-  if(last.length)chunks.push(new Uint8Array(last));
-
-  return new Blob(chunks,{type:"audio/mpeg"});
+ return new Blob(chunks,{type:"audio/mpeg"});
 
 }
 
 function downloadBlob(blob,ext){
 
-  const name=($("projectTitle").value.trim()||"myvoice-song").replace(/[^\w-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80)||"myvoice-song";
+ const name=($("projectTitle").value.trim()||"myvoice-song").replace(/[^\w-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80)||"myvoice-song";
 
-  const url=URL.createObjectURL(blob),a=document.createElement("a");
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
 
-  a.href=url;a.download=name+"."+ext;document.body.appendChild(a);a.click();a.remove();
+ a.href=url;a.download=name+"."+ext;document.body.appendChild(a);a.click();a.remove();
 
-  setTimeout(()=>URL.revokeObjectURL(url),60000);
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
 
 }
 
@@ -1638,177 +1304,121 @@ $("mp3Quality").disabled=true;
 
 $("exportBtn").onclick=async()=>{
 
-  $("exportBtn").disabled=true;
+ $("exportBtn").disabled=true;
 
-  try{
+ try{
 
-    status($("exportStatus"),"Mixing and processing. Keep this page open.");
+  const mix=await renderMix();let blob,ext;
 
-    const mix=await renderMix();
+  if($("exportFormat").value==="mp3"){
 
-    let blob,ext;
+   const q=Number($("mp3Quality").value)||192;status($("exportStatus"),"Encoding MP3 at "+q+" kbps…");
 
-    if($("exportFormat").value==="mp3"){
+   blob=audioBufferToMp3(mix,q);ext="mp3";
 
-      const q=Number($("mp3Quality").value)||192;
+  }else{blob=audioBufferToWav(mix);ext="wav"}
 
-      status($("exportStatus"),"Encoding MP3 at "+q+" kbps…");
+  downloadBlob(blob,ext);
 
-      blob=audioBufferToMp3(mix,q);ext="mp3";
+  status($("exportStatus"),ext.toUpperCase()+" export created. On iPhone, check Downloads or use Share → Save to Files.","good");
 
-    }else{
+ }catch(e){status($("exportStatus"),e.message||"Export failed.","bad")}
 
-      blob=audioBufferToWav(mix);ext="wav";
-
-    }
-
-    downloadBlob(blob,ext);
-
-    status($("exportStatus"),ext.toUpperCase()+" export created. Check Downloads or use Share → Save to Files.","good");
-
-  }catch(e){
-
-    status($("exportStatus"),e.message||"Export failed.","bad");
-
-  }finally{
-
-    $("exportBtn").disabled=false;
-
-  }
+ finally{$("exportBtn").disabled=false}
 
 };
 
-/* Supabase saved projects */
+/* Supabase projects */
 
 async function saveProject(){
 
-  if(!supabase||!currentUser)throw Error("Sign in before saving.");
+ if(!supabase||!currentUser)throw Error("Sign in before saving.");
 
-  const payload={
+ const payload={user_id:currentUser.id,title:$("projectTitle").value.trim()||"Untitled project",lyrics:$("lyricsInput").value,lyric_times:lineTimes,updated_at:new Date().toISOString()};
 
-    user_id:currentUser.id,
+ const q=currentProjectId
 
-    title:$("projectTitle").value.trim()||"Untitled project",
+  ?supabase.from(TABLE).update(payload).eq("id",currentProjectId).eq("user_id",currentUser.id).select().single()
 
-    lyrics:$("lyricsInput").value,
+  :supabase.from(TABLE).insert(payload).select().single();
 
-    lyric_times:lineTimes,
+ const {data,error}=await q;if(error)throw error;
 
-    updated_at:new Date().toISOString()
+ if(data)currentProjectId=data.id;
 
-  };
-
-  const q=currentProjectId
-
-    ?supabase.from(TABLE).update(payload).eq("id",currentProjectId).eq("user_id",currentUser.id).select().single()
-
-    :supabase.from(TABLE).insert(payload).select().single();
-
-  const {data,error}=await q;
-
-  if(error)throw error;
-
-  if(data)currentProjectId=data.id;
-
-  await loadProjects();
-
-  mainStatus("Project saved. Audio remains on this device; lyrics and timing are in your account.","good");
+ await loadProjects();mainStatus("Project saved. Audio files remain on this device.","good");
 
 }
 
 $("saveBtn").onclick=async()=>{
 
-  $("saveBtn").disabled=true;
+ $("saveBtn").disabled=true;
 
-  try{await saveProject()}
+ try{await saveProject()}catch(e){mainStatus(e.message||"Could not save project.","bad")}
 
-  catch(e){mainStatus(e.message||"Could not save project.","bad")}
-
-  finally{$("saveBtn").disabled=false}
+ finally{$("saveBtn").disabled=false}
 
 };
 
 async function loadProjects(){
 
-  const list=$("projectList");
+ const list=$("projectList");
 
-  if(!supabase||!currentUser){list.textContent="Sign in to view saved projects.";return}
+ if(!supabase||!currentUser){list.textContent="Sign in to view saved projects.";return}
 
-  list.textContent="Loading saved projects…";
+ list.textContent="Loading saved projects…";
 
-  const {data,error}=await supabase.from(TABLE)
+ const {data,error}=await supabase.from(TABLE).select("id,title,lyrics,lyric_times,updated_at").eq("user_id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
 
-    .select("id,title,lyrics,lyric_times,created_at,updated_at")
+ if(error){list.textContent="Could not load projects: "+error.message;return}
 
-    .eq("user_id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
+ list.replaceChildren();
 
-  if(error){
+ if(!data?.length){list.textContent="No saved projects yet.";return}
 
-    list.textContent="Could not load projects: "+error.message;
+ data.forEach(p=>{
 
-    mainStatus("Could not load projects: "+error.message,"bad");
+  const item=document.createElement("div");item.className="project-item";
 
-    return;
+  const title=document.createElement("span");title.textContent=p.title||"Untitled project";title.style.flex="1";
 
-  }
+  const actions=document.createElement("div");actions.className="row";
 
-  list.replaceChildren();
+  const load=document.createElement("button");load.className="secondary";load.textContent="Load";load.onclick=()=>loadProject(p);
 
-  if(!data?.length){list.textContent="No saved projects yet. Create one and tap Save project.";return}
+  const del=document.createElement("button");del.className="danger";del.textContent="Delete";del.onclick=()=>deleteProject(p);
 
-  data.forEach(p=>{
+  actions.append(load,del);item.append(title,actions);list.append(item);
 
-    const item=document.createElement("div");item.className="project-item";
-
-    const title=document.createElement("span");title.className="project-title";title.textContent=p.title||"Untitled project";
-
-    const actions=document.createElement("div");actions.className="row";
-
-    const load=document.createElement("button");load.className="secondary";load.textContent="Load";load.onclick=()=>loadProject(p);
-
-    const del=document.createElement("button");del.className="danger";del.textContent="Delete";del.onclick=()=>deleteProject(p);
-
-    actions.append(load,del);item.append(title,actions);list.append(item);
-
-  });
+ });
 
 }
 
 function loadProject(p){
 
-  currentProjectId=p.id;
+ currentProjectId=p.id;$("projectTitle").value=p.title||"";$("lyricsInput").value=p.lyrics||"";
 
-  $("projectTitle").value=p.title||"";
+ lyricLines=getLyrics();lineTimes=parseTimes(p.lyric_times);
 
-  $("lyricsInput").value=p.lyrics||"";
+ if(lineTimes.length!==lyricLines.length)lineTimes=lyricLines.map((_,i)=>lineTimes[i]??i*4);
 
-  lyricLines=getLyrics();
+ renderLyrics();status($("lyricsStatus"),"Project loaded. Re-import its audio stems to play or export.");
 
-  lineTimes=parseTimes(p.lyric_times);
-
-  if(lineTimes.length!==lyricLines.length)lineTimes=lyricLines.map((_,i)=>lineTimes[i]??i*4);
-
-  renderLyrics();
-
-  status($("lyricsStatus"),"Project loaded. Re-import its audio files to play or export.");
-
-  switchTab("song");
+ switchTab("song");
 
 }
 
 async function deleteProject(p){
 
-  if(!confirm(`Delete "${p.title||"Untitled project"}"? This cannot be undone.`))return;
+ if(!confirm('Delete "'+(p.title||"Untitled project")+'"? This cannot be undone.'))return;
 
-  const {error}=await supabase.from(TABLE).delete().eq("id",p.id).eq("user_id",currentUser.id);
+ const {error}=await supabase.from(TABLE).delete().eq("id",p.id).eq("user_id",currentUser.id);
 
-  if(error){mainStatus("Could not delete project: "+error.message,"bad");return}
+ if(error){mainStatus("Could not delete project: "+error.message,"bad");return}
 
-  if(currentProjectId===p.id)currentProjectId=null;
+ if(currentProjectId===p.id)currentProjectId=null;
 
-  await loadProjects();
-
-  mainStatus("Project deleted.");
+ await loadProjects();mainStatus("Project deleted.");
 
 }
 
@@ -1816,41 +1426,27 @@ $("refreshProjectsBtn").onclick=loadProjects;
 
 async function init(){
 
-  try{
+ try{
 
-    if(!window.supabase?.createClient)throw Error("Supabase client did not load. Check internet.");
+  if(!window.supabase?.createClient)throw Error("Supabase client did not load. Check internet.");
 
-    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
-      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+  const {data,error}=await supabase.auth.getSession();if(error)throw error;
 
-    });
+  currentUser=data.session?.user||null;
 
-    const {data,error}=await supabase.auth.getSession();
+  supabase.auth.onAuthStateChange((_event,session)=>{
 
-    if(error)throw error;
+   currentUser=session?.user||null;
 
-    currentUser=data.session?.user||null;
+   if(currentUser){showApp();loadProjects()}else showAuth("Sign in or create an account to continue.");
 
-    supabase.auth.onAuthStateChange((_event,session)=>{
+  });
 
-      currentUser=session?.user||null;
+  if(currentUser){showApp();await loadProjects()}else showAuth("Sign in or create an account to continue.");
 
-      if(currentUser){showApp();loadProjects()}
-
-      else showAuth("Sign in or create an account to continue.");
-
-    });
-
-    if(currentUser){showApp();await loadProjects()}
-
-    else showAuth("Sign in or create an account to continue.");
-
-  }catch(e){
-
-    showAuth("Could not initialize the app: "+(e.message||"Unknown error"));
-
-  }
+ }catch(e){showAuth("Could not initialize the app: "+(e.message||"Unknown error"))}
 
 }
 
